@@ -1,0 +1,158 @@
+/* ============================================================
+   TIPOGRAFÍA — Facultad de Ingenierías UTI
+
+   Registro académico, no corporativo. La universidad usa Roboto Slab
+   como tipografía secundaria: la serifa es parte de su voz. Aquí se
+   sube de nivel con una serifa variable de verdad.
+
+   Display : Fraunces        (serifa "old-style" variable, con carácter;
+                              eje opsz para que el titular no se vea blando)
+   Body    : IBM Plex Sans   (neutral, técnica, académica; legible en bloque)
+   Mono    : IBM Plex Mono   (misma familia: etiquetas, datos, "readouts")
+   ============================================================ */
+
+/* Los ejes SOFT y WONK hay que pedirlos explícitamente: Google Fonts fija a su
+   valor por defecto (0) cualquier eje que no aparezca en la URL, y entonces
+   `font-variation-settings: 'WONK' 1` no haría nada. */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,400..900,0..100,0..1;1,9..144,400..900,0..100,0..1&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+:root {
+  --font-display: 'Fraunces', 'Roboto Slab', Georgia, serif;
+  --font-heading: var(--font-display);
+  --font-body: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  /* Escala fluida — se adapta al viewport sin media queries */
+  --text-xs:   0.75rem;
+  --text-sm:   0.875rem;
+  --text-base: 1rem;
+  --text-lg:   1.125rem;
+  --text-xl:   1.25rem;
+  --text-2xl:  clamp(1.375rem, 1.2rem + 0.7vw, 1.625rem);
+  --text-3xl:  clamp(1.625rem, 1.35rem + 1.2vw, 2.125rem);
+  --text-4xl:  clamp(2rem, 1.55rem + 2vw, 3rem);
+  --text-5xl:  clamp(2.5rem, 1.8rem + 3.2vw, 4rem);
+  --text-6xl:  clamp(3rem, 1.9rem + 5vw, 5.5rem);
+  --text-7xl:  clamp(3.5rem, 1.8rem + 7.5vw, 7.5rem);
+
+  --leading-none:    1;
+  --leading-tight:   1.08;
+  --leading-snug:    1.25;
+  --leading-normal:  1.5;
+  --leading-relaxed: 1.7;
+
+  /* Una serifa no tolera el tracking negativo agresivo de una grotesca:
+     las serifas empiezan a chocar. Escala mucho más contenida. */
+  --tracking-tighter: -0.02em;
+  --tracking-tight:   -0.011em;
+  --tracking-normal:  0;
+  --tracking-wide:    0.02em;
+  --tracking-widest:  0.18em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--text-primary);
+  text-wrap: balance;
+  /* opsz alto = serifas más finas y contraste alto, propio de un titular.
+     WONK activa las formas "raras" de Fraunces (la g, la a): es lo que
+     evita que la serifa se lea como una Georgia genérica. */
+  font-variation-settings: 'SOFT' 0, 'WONK' 1;
+  font-optical-sizing: auto;
+}
+
+h1 { font-size: var(--text-5xl); font-weight: 800; letter-spacing: var(--tracking-tighter); }
+h2 { font-size: var(--text-4xl); font-weight: 700; letter-spacing: var(--tracking-tighter); }
+h3 { font-size: var(--text-3xl); font-weight: 600; }
+h4 { font-size: var(--text-2xl); font-weight: 600; }
+h5 { font-size: var(--text-xl);  font-weight: 600; }
+h6 { font-size: var(--text-base); font-weight: 600; }
+
+p {
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+  text-wrap: pretty;
+}
+
+/* ---- Etiqueta técnica: el "sello" tipográfico del sitio ---- */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-widest);
+  color: var(--accent);
+}
+
+.eyebrow::before {
+  content: '';
+  width: 1.75rem;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.6;
+}
+
+.eyebrow--plain::before { display: none; }
+
+/* Numeración de sección estilo plano técnico: 01 / 02 / 03 */
+.section-index {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  letter-spacing: var(--tracking-widest);
+  color: var(--text-muted);
+}
+
+.mono {
+  font-family: var(--font-mono);
+  letter-spacing: var(--tracking-wide);
+}
+
+/* Gradiente de texto: naranja → dorado, los dos acentos institucionales.
+   Ambos son claros y cálidos, así que contrastan sobre el morado profundo
+   sin el bajón de luminancia que tenía el tramo morado. */
+.text-gradient {
+  background: linear-gradient(100deg, var(--color-orange-500) 0%, var(--color-orange-400) 45%, var(--color-gold-400) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+/* Sobre papel claro el dorado se pierde: se ancla en tonos más profundos */
+[data-theme='light'] .text-gradient {
+  background: linear-gradient(100deg, var(--color-orange-600) 0%, var(--color-orange-500) 50%, var(--color-gold-600) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.text-orange    { color: var(--accent); }
+.text-muted     { color: var(--text-muted); }
+.text-sm        { font-size: var(--text-sm); }
+.text-lg        { font-size: var(--text-lg); }
+.text-center    { text-align: center; }
+.font-medium    { font-weight: 500; }
+.font-bold      { font-weight: 700; }
+.lead {
+  font-size: var(--text-lg);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+  max-width: 62ch;
+}
+
+/* Subrayado dibujado a mano, animado al revelarse */
+.underline-sweep {
+  background-image: linear-gradient(var(--accent), var(--accent));
+  background-repeat: no-repeat;
+  background-position: 0 88%;
+  background-size: 0% 0.14em;
+  transition: background-size 700ms var(--ease-out-expo) 300ms;
+}
+.is-visible .underline-sweep,
+.underline-sweep.is-visible { background-size: 100% 0.14em; }

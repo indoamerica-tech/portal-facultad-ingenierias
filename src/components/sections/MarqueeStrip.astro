@@ -1,0 +1,58 @@
+---
+import Icon from '../ui/Icon.astro';
+
+/** Palabras que se repiten en bucle: dan pulso al sitio entre secciones.
+    Solo temas de las tres carreras vigentes en Quito. */
+const items = [
+  'Ciberseguridad',
+  'Energías renovables',
+  'Lean manufacturing',
+  'Ciencia de datos',
+  'Sistemas de potencia',
+  'Investigación de operaciones',
+  'Redes inteligentes',
+  'Gestión de calidad',
+  'Infraestructura de red',
+];
+---
+
+<div class="strip" role="presentation">
+  <div class="marquee">
+    <div class="marquee__track" data-marquee>
+      {items.map((item) => (
+        <span class="strip__item">
+          <Icon name="plus" size={13} class="strip__plus" />
+          <span class="mono">{item}</span>
+        </span>
+      ))}
+    </div>
+  </div>
+</div>
+
+<style>
+  .strip {
+    position: relative;
+    padding-block: var(--space-5);
+    border-block: 1px solid var(--border-color);
+    background: var(--bg-secondary);
+    overflow: hidden;
+  }
+  [data-theme='dark'] .strip { background: rgba(255, 255, 255, 0.015); }
+
+  .strip :global(.marquee__track) { --marquee-duration: 56s; }
+
+  .strip__item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    letter-spacing: var(--tracking-wide);
+    color: var(--text-secondary);
+    white-space: nowrap;
+    transition: color var(--transition-base);
+  }
+  .strip__item:hover { color: var(--text-primary); }
+
+  .strip__plus { color: var(--accent); opacity: 0.8; }
+</style>

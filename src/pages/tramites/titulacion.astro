@@ -1,0 +1,83 @@
+---
+import TramiteLayout from '../../layouts/TramiteLayout.astro';
+import TitulacionWidget from '../../components/interactive/TitulacionWidget';
+import Button from '../../components/ui/Button.astro';
+import Icon from '../../components/ui/Icon.astro';
+---
+
+<TramiteLayout 
+  title="Proceso de Titulación" 
+  description="Guía paso a paso y requisitos claves para la obtención del título profesional en la Facultad de Ingenierías." 
+  icon="graduation-cap"
+>
+  <div class="intro-box" data-animate>
+    <h2>Fase de Integración Curricular</h2>
+    <p>
+      El proceso de graduación se activa una vez que el estudiante ha completado y aprobado el proyecto formativo de Integración Curricular, además de acreditar la totalidad de las asignaturas, horas de prácticas preprofesionales y vinculación exigidas en su plan de estudios.
+    </p>
+  </div>
+
+  <div class="stepper-section" data-animate>
+    <h3 style="margin-bottom: var(--space-4);">Flujo del Proceso Académico:</h3>
+    <TitulacionWidget client:load />
+  </div>
+
+  <div class="faq-cta" data-animate>
+    <div class="faq-cta-content">
+      <h3>¿Preguntas sobre las modalidades de titulación?</h3>
+      <p>Conoce los detalles de las modalidades disponibles (Trabajo de Integración Curricular o Examen de Grado de Carácter Complexivo) en nuestra sección de preguntas frecuentes.</p>
+    </div>
+    <Button href="/faq" variant="primary">Ver Preguntas Frecuentes</Button>
+  </div>
+</TramiteLayout>
+
+<style>
+  .intro-box {
+    background: var(--bg-tertiary);
+    padding: var(--space-6);
+    border-radius: var(--radius-lg);
+    border-left: 4px solid var(--color-orange-500);
+    margin-bottom: var(--space-8);
+  }
+  
+  .intro-box h2 {
+    margin-top: 0 !important;
+    margin-bottom: var(--space-2);
+    font-size: var(--text-lg);
+  }
+
+  .stepper-section {
+    margin-bottom: var(--space-12);
+  }
+
+  .faq-cta {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-6);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    padding: var(--space-8);
+    margin-top: var(--space-12);
+    box-shadow: var(--shadow-sm);
+  }
+
+  @media (min-width: 768px) {
+    .faq-cta {
+      flex-direction: row;
+      align-items: center;
+    }
+  }
+
+  .faq-cta-content h3 {
+    margin: 0 0 var(--space-2) 0;
+  }
+
+  .faq-cta-content p {
+    margin: 0;
+    font-size: var(--text-sm);
+  }
+</style>
+

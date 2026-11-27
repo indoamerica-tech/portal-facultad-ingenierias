@@ -1,0 +1,236 @@
+---
+import Icon from '../ui/Icon.astro';
+import { novedadesDeCarrera, type Novedad } from '../../data/site';
+
+interface Props {
+  /** Slug de la carrera cuyas novedades se muestran */
+  slug: string;
+}
+
+const { slug } = Astro.props;
+const novedades = novedadesDeCarrera(slug);
+
+/* Los eventos son futuro: el más próximo va primero (ascendente).
+   Las noticias y anuncios son pasado: lo más reciente primero (descendente,
+   que es como los devuelve `novedadesDeCarrera`). */
+const eventos = novedades
+  .filter((n) => n.tipo === 'Evento')
+  .sort((a, b) => a.fechaISO.localeCompare(b.fechaISO));
+const resto = novedades.filter((n) => n.tipo !== 'Evento');
+
+/* El dorado institucional se reserva para distinciones; los anuncios
+   llevan el naranja porque son accionables y urgentes. */
+const badgeDe = (tipo: Novedad['tipo']) =>
+  tipo === 'Anuncio' ? 'badge-orange' : tipo === 'Noticia' ? 'badge-gold' : 'badge-purple';
+
+/** "28 Ago 2026" → { dia: "28", mes: "AGO" } */
+const partesFecha = (fecha: string) => {
+  const [dia, mes] = fecha.split(' ');
+  return { dia, mes: mes.toUpperCase().replace('.', '') };
+};
+---
+
+{novedades.length > 0 && (
+  <section class="novedades section" id="novedades">
+    <div class="container">
+      <header class="section-header">
+        <span class="eyebrow" data-reveal="fade">De esta carrera</span>
+        <h2 data-reveal="up">Eventos, noticias y anuncios</h2>
+      </header>
+
+      <div class="novedades__grid">
+        {/* --- Eventos: lo que hay que agendar --- */}
+        {eventos.length > 0 && (
+          <div class="col">
+            <h3 class="col__title mono">Próximos eventos</h3>
+            <ul class="eventos" data-stagger="80">
+              {eventos.map((e) => {
+                const { dia, mes } = partesFecha(e.fecha);
+                return (
+                  <li class="evento spotlight" data-reveal="up">
+                    <time class="evento__date" datetime={e.fechaISO}>
+                      <span class="evento__day">{dia}</span>
+                      <span class="evento__month mono">{mes}</span>
+                    </time>
+                    <div class="evento__body">
+                      <h4>{e.titulo}</h4>
+                      <p>{e.resumen}</p>
+                      <div class="evento__meta">
+                        {e.hora && (
+                          <span class="meta-row"><Icon name="clock" size={12} />{e.hora}</span>
+                        )}
+                        {e.lugar && (
+                          <span class="meta-row"><Icon name="map-pin" size={12} />{e.lugar}</span>
+                        )}
+                      </div>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        )}
+
+        {/* --- Noticias y anuncios --- */}
+        {resto.length > 0 && (
+          <div class="col">
+            <h3 class="col__title mono">Noticias y anuncios</h3>
+            <ul class="notas" data-stagger="80">
+              {resto.map((n) => (
+                <li class="nota spotlight" data-reveal="up">
+                  <div class="nota__top">
+                    <span class:list={['badge', badgeDe(n.tipo)]}>{n.tipo}</span>
+                    <time class="mono" datetime={n.fechaISO}>{n.fecha}</time>
+                  </div>
+                  <h4>{n.titulo}</h4>
+                  <p>{n.resumen}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  .novedades {
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border-color);
+  }
+  [data-theme='dark'] .novedades { background: rgba(255, 255, 255, 0.012); }
+
+  .novedades__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2.5rem, 4vw, 4rem);
+    align-items: start;
+  }
+  @media (min-width: 900px) {
+    .novedades__grid { grid-template-columns: 1.1fr 1fr; }
+  }
+
+  .col__title {
+    font-size: 0.625rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-widest);
+    color: var(--text-muted);
+    margin-bottom: var(--space-5);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  /* ---------- Eventos ---------- */
+  .eventos { display: flex; flex-direction: column; gap: var(--space-3); }
+
+  .evento {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-4);
+    padding: var(--space-4);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+    background: var(--surface-card);
+    transition: border-color var(--transition-base), transform var(--transition-base);
+  }
+  [data-theme='light'] .evento { background: #fff; }
+  .evento:hover {
+    border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+    transform: translateY(-2px);
+  }
+
+  .evento__date {
+    display: grid;
+    place-items: center;
+    align-content: center;
+    width: 60px; height: 60px;
+    flex-shrink: 0;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    background: var(--bg-tertiary);
+    transition: all 420ms var(--ease-out-expo);
+  }
+  .evento:hover .evento__date {
+    background: var(--accent-soft);
+    border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  }
+
+  .evento__day {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: 800;
+    line-height: 1;
+    color: var(--text-primary);
+  }
+  .evento__month {
+    font-size: 0.5rem;
+    letter-spacing: var(--tracking-widest);
+    color: var(--text-muted);
+    margin-top: 3px;
+  }
+  .evento:hover .evento__month { color: var(--accent-text); }
+
+  .evento__body { display: flex; flex-direction: column; gap: var(--space-2); min-width: 0; }
+  .evento__body h4 {
+    font-size: var(--text-base);
+    font-weight: 600;
+    line-height: var(--leading-snug);
+  }
+  .evento__body p {
+    font-size: var(--text-sm);
+    line-height: var(--leading-relaxed);
+    margin: 0;
+  }
+  .evento__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-4);
+    margin-top: var(--space-1);
+  }
+  .evento__meta .meta-row { font-size: 0.625rem; }
+
+  /* ---------- Noticias y anuncios ---------- */
+  .notas { display: flex; flex-direction: column; gap: var(--space-3); }
+
+  .nota {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-5);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+    background: var(--surface-card);
+    transition: border-color var(--transition-base), transform var(--transition-base);
+  }
+  [data-theme='light'] .nota { background: #fff; }
+  .nota:hover {
+    border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+    transform: translateX(4px);
+  }
+
+  .nota__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+  .nota__top time {
+    font-size: 0.625rem;
+    letter-spacing: var(--tracking-wide);
+    color: var(--text-muted);
+  }
+
+  .nota h4 {
+    font-size: var(--text-base);
+    font-weight: 600;
+    line-height: var(--leading-snug);
+  }
+  .nota p {
+    font-size: var(--text-sm);
+    line-height: var(--leading-relaxed);
+    color: var(--text-muted);
+    margin: 0;
+  }
+</style>

@@ -1,0 +1,209 @@
+---
+import Icon from '../ui/Icon.astro';
+import { CARRERAS } from '../../data/site';
+---
+
+<section class="section careers" id="carreras">
+  <div class="container">
+    <header class="section-header">
+      <span class="eyebrow" data-reveal="fade">
+        <span class="section-index">01</span> Oferta académica
+      </span>
+      <h2 data-reveal="up">
+        Tres formas de <span class="underline-sweep">cambiar</span> el mundo material
+      </h2>
+      <p data-reveal="up" data-reveal-delay="1">
+        Cada carrera resuelve una capa distinta del mismo problema: cómo construir sistemas
+        que funcionen, resistan y sirvan a la gente.
+      </p>
+    </header>
+
+    <div class="careers__grid" data-stagger="70">
+      {CARRERAS.map((c, i) => (
+        <a
+          href={c.href}
+          class="career spotlight border-glow"
+          style={`--accent-card:${c.color}`}
+          data-reveal="up"
+          data-tilt="4"
+        >
+          <span class="career__index mono">{String(i + 1).padStart(2, '0')}</span>
+
+          <span class="career__icon">
+            <Icon name={c.icon} size={24} />
+          </span>
+
+          <span class="career__body">
+            <h3 class="career__name">{c.nombre}</h3>
+            <p class="career__desc">{c.descripcion}</p>
+          </span>
+
+          <span class="career__tags">
+            {c.destacados.map((d) => <span class="mono">{d}</span>)}
+          </span>
+
+          <span class="career__foot">
+            <span class="career__meta">
+              <span class="meta-row"><Icon name="map-pin" size={13} />{c.campus}</span>
+              <span class="meta-row"><Icon name="clock" size={13} />{c.modalidad}</span>
+            </span>
+            <span class="career__cta" aria-hidden="true">
+              <Icon name="arrow-right" size={16} />
+            </span>
+          </span>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .careers { overflow: hidden; }
+
+  .careers__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 680px) {
+    .careers__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1080px) {
+    .careers__grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  .career {
+    --accent-card: var(--accent);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding: var(--space-6);
+    min-height: 21rem;
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--border-color);
+    background: var(--surface-card);
+    overflow: hidden;
+    isolation: isolate;
+    transition:
+      transform 420ms var(--ease-out-expo),
+      border-color var(--transition-base),
+      box-shadow 420ms var(--ease-out-expo);
+  }
+  [data-theme='light'] .career { background: #fff; box-shadow: var(--shadow-sm); }
+
+  .career:hover {
+    border-color: color-mix(in srgb, var(--accent-card) 45%, transparent);
+    box-shadow: var(--shadow-xl);
+  }
+
+  /* El spotlight toma el color de la carrera, no el naranja global */
+  .career.spotlight::before {
+    background: radial-gradient(
+      420px circle at var(--mx, 50%) var(--my, 50%),
+      color-mix(in srgb, var(--accent-card) 13%, transparent),
+      transparent 62%
+    );
+  }
+  .career.border-glow::after {
+    background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), var(--accent-card), transparent 70%);
+  }
+
+  .career__index {
+    position: absolute;
+    top: var(--space-5);
+    right: var(--space-6);
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+    letter-spacing: var(--tracking-widest);
+    transition: color var(--transition-base);
+  }
+  .career:hover .career__index { color: var(--accent-card); }
+
+  .career__icon {
+    display: grid;
+    place-items: center;
+    width: 52px; height: 52px;
+    border-radius: var(--radius-md);
+    color: var(--accent-card);
+    background: color-mix(in srgb, var(--accent-card) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent-card) 26%, transparent);
+    transition: transform 520ms var(--ease-out-back), background-color var(--transition-base);
+  }
+  .career:hover .career__icon {
+    transform: scale(1.08) rotate(-7deg);
+    background: color-mix(in srgb, var(--accent-card) 20%, transparent);
+  }
+
+  .career__body { display: flex; flex-direction: column; gap: var(--space-2); }
+
+  .career__name {
+    font-size: var(--text-xl);
+    font-weight: 700;
+    letter-spacing: var(--tracking-tight);
+    color: var(--text-primary);
+    text-wrap: balance;
+  }
+
+  .career__desc {
+    font-size: var(--text-sm);
+    line-height: var(--leading-relaxed);
+    margin: 0;
+  }
+
+  .career__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .career__tags span {
+    padding: 0.28rem 0.55rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.5625rem;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+    transition: all var(--transition-base);
+  }
+  .career:hover .career__tags span {
+    color: var(--text-secondary);
+    border-color: var(--border-strong);
+  }
+
+  .career__foot {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-top: auto;
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--border-color);
+  }
+
+  .career__meta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    min-width: 0;
+  }
+  .career__meta .meta-row { font-size: 0.625rem; }
+
+  .career__cta {
+    display: grid;
+    place-items: center;
+    width: 38px; height: 38px;
+    flex-shrink: 0;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    transition: all 420ms var(--ease-out-expo);
+  }
+  .career:hover .career__cta {
+    background: var(--accent-card);
+    border-color: var(--accent-card);
+    color: #fff;
+    transform: translateX(4px);
+  }
+</style>

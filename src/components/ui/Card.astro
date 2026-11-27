@@ -1,0 +1,56 @@
+---
+interface Props {
+  class?: string;
+  href?: string;
+  animate?: boolean;
+  glow?: boolean;
+}
+
+const { class: className = '', href, animate = true, glow = false } = Astro.props;
+
+const Element = href ? 'a' : 'div';
+---
+
+<Element 
+  href={href} 
+  class={`card ${glow ? 'card-glow' : ''} ${className}`} 
+  data-animate={animate ? true : undefined}
+>
+  <slot />
+</Element>
+
+<style>
+  /* Base styles are in components.css */
+  a.card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  /* Subtle Border effect instead of heavy glow */
+  .card-glow {
+    position: relative;
+    background: var(--bg-secondary);
+    z-index: 1;
+  }
+
+  .card-glow::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    background: linear-gradient(135deg, var(--color-neutral-300) 0%, var(--color-neutral-200) 100%);
+    border-radius: inherit;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity var(--transition-base);
+  }
+
+  [data-theme='dark'] .card-glow::before {
+    background: linear-gradient(135deg, var(--color-neutral-600) 0%, var(--color-neutral-700) 100%);
+  }
+
+  .card-glow:hover::before {
+    opacity: 1;
+  }
+</style>
+

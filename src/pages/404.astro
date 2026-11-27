@@ -1,0 +1,113 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+---
+
+<PageLayout title="Página no encontrada" description="Error 404" assistant={false}>
+  <section class="nf">
+    <div class="nf__bg" aria-hidden="true">
+      <div class="aurora">
+        <span class="aurora__blob aurora__blob--a"></span>
+        <span class="aurora__blob aurora__blob--b"></span>
+      </div>
+      <div class="blueprint-grid"></div>
+    </div>
+
+    <div class="container nf__inner">
+      <span class="eyebrow" data-reveal="fade">Error 404</span>
+
+      <p class="nf__code" data-reveal="scale" aria-hidden="true">404</p>
+
+      <h1 class="nf__title" data-reveal="mask" data-reveal-delay="1">
+        <span>Esta ruta no existe</span>
+      </h1>
+
+      <p class="lead" data-reveal="up" data-reveal-delay="2">
+        Toda estructura tiene planos. Este enlace no aparece en los nuestros.
+        Revisa la dirección o vuelve a un terreno conocido.
+      </p>
+
+      <div class="nf__actions" data-reveal="up" data-reveal-delay="3">
+        <a href="/" class="btn btn-primary btn-lg" data-magnetic="0.25">
+          Volver al inicio <Icon name="arrow-right" size={17} />
+        </a>
+        <a href="/tramites" class="btn btn-outline btn-lg">Ir a trámites</a>
+      </div>
+
+      <nav class="nf__links" data-reveal="fade" data-reveal-delay="4" aria-label="Enlaces útiles">
+        <a href="/carreras" class="link-underline">Carreras</a>
+        <a href="/tramites" class="link-underline">Trámites</a>
+        <a href="/tramites/horarios" class="link-underline">Horarios</a>
+        <a href="/faq" class="link-underline">Preguntas frecuentes</a>
+      </nav>
+    </div>
+  </section>
+</PageLayout>
+
+<style>
+  .nf {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    min-height: 78vh;
+    padding-block: var(--space-24);
+    text-align: center;
+  }
+
+  .nf__bg { position: absolute; inset: 0; z-index: -1; }
+
+  .nf__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-5);
+  }
+
+  /* El número como textura, no como titular */
+  .nf__code {
+    font-family: var(--font-display);
+    font-size: clamp(7rem, 24vw, 18rem);
+    font-weight: 800;
+    line-height: 0.85;
+    letter-spacing: var(--tracking-tighter);
+    margin: 0;
+    background: linear-gradient(180deg, var(--accent) 0%, transparent 92%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    user-select: none;
+  }
+
+  .nf__title {
+    font-size: var(--text-4xl);
+    letter-spacing: var(--tracking-tighter);
+    margin-top: calc(var(--space-4) * -1);
+  }
+
+  .nf .lead { max-width: 46ch; }
+
+  .nf__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-4);
+    margin-top: var(--space-2);
+  }
+
+  .nf__links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-5);
+    margin-top: var(--space-8);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--border-color);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+  .nf__links a { transition: color var(--transition-base); }
+  .nf__links a:hover { color: var(--accent-text); }
+</style>

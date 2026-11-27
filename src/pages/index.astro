@@ -1,0 +1,25 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import HeroSection from '../components/sections/HeroSection.astro';
+import MarqueeStrip from '../components/sections/MarqueeStrip.astro';
+import CareersSection from '../components/sections/CareersSection.astro';
+import QuickAccess from '../components/sections/QuickAccess.astro';
+import BenefitsSection from '../components/sections/BenefitsSection.astro';
+
+const title = 'Inicio';
+const description =
+  'Portal de la Facultad de Ingenierías de la Universidad Tecnológica Indoamérica, campus Quito. Tres carreras y trámites en línea.';
+---
+
+<PageLayout title={title} description={description}>
+  <HeroSection />
+
+  <div id="contenido"></div>
+  <MarqueeStrip />
+
+  <CareersSection />
+  <QuickAccess />
+  <BenefitsSection />
+
+  {/* Eventos y noticias ya no van aquí: cada carrera muestra los suyos. */}
+</PageLayout>

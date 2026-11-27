@@ -1,0 +1,650 @@
+---
+import ThemeToggle from '../interactive/ThemeToggle';
+import Icon from '../ui/Icon.astro';
+import { CARRERAS, TRAMITES } from '../../data/site';
+
+const path = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === '/' ? path === '/' : path.startsWith(href);
+---
+
+<header class="header" data-header>
+  <!-- Barra de utilidades institucional -->
+  <div class="utility-bar">
+    <div class="container utility-container">
+      <p class="utility-tag mono">
+        <span class="live-dot"></span>
+        Universidad Tecnológica Indoamérica
+      </p>
+      {/* Aula Virtual, SGA y Correo quedan fuera del alcance de esta fase */}
+      <div class="utility-links">
+        <ThemeToggle client:load />
+      </div>
+    </div>
+  </div>
+
+  <!-- Navegación principal -->
+  <div class="main-nav">
+    <div class="container nav-container">
+      <a href="/" class="logo" aria-label="Inicio — Facultad de Ingenierías">
+        <span class="logo-mark" aria-hidden="true">
+          {/* Misma triada de nodos que el favicon */}
+          <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
+            <path d="M32 17 16 46h32z" stroke="currentColor" stroke-width="3.4" stroke-linejoin="round"/>
+            <circle cx="32" cy="17" r="7.2" fill="currentColor"/>
+            <circle cx="16" cy="46" r="7.2" fill="currentColor"/>
+            <circle cx="48" cy="46" r="7.2" fill="currentColor"/>
+          </svg>
+        </span>
+        <span class="logo-text">
+          <span class="logo-kicker mono">Facultad de</span>
+          <strong>Ingenierías</strong>
+        </span>
+      </a>
+
+      <nav class="desktop-nav" aria-label="Navegación principal">
+        <ul>
+          <li><a href="/" class:list={['nav-link', { 'is-active': isActive('/') }]}>Inicio</a></li>
+
+          <li class="has-mega has-mega--narrow">
+            <a href="/carreras" class:list={['nav-link', { 'is-active': isActive('/carreras') }]}>
+              Carreras <Icon name="chevron-down" size={14} class="nav-caret" />
+            </a>
+            <div class="mega">
+              <div class="mega__inner">
+                {/* Con tres carreras, una sola columna se lee mejor que dos */}
+                <div class="mega__grid mega__grid--single">
+                  {CARRERAS.map((c) => (
+                    <a href={c.href} class="mega__item" style={`--item-accent:${c.color}`}>
+                      <span class="mega__icon"><Icon name={c.icon} size={18} /></span>
+                      <span class="mega__body">
+                        <strong>{c.nombre}</strong>
+                        <span class="mega__meta mono">{c.campus} · {c.modalidad}</span>
+                      </span>
+                      <Icon name="arrow-up-right" size={15} class="mega__arrow" />
+                    </a>
+                  ))}
+                </div>
+                <a href="/carreras" class="mega__footer">
+                  Ver todas las carreras <Icon name="arrow-right" size={15} />
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li class="has-mega has-mega--narrow">
+            <a href="/tramites" class:list={['nav-link', { 'is-active': isActive('/tramites') }]}>
+              Trámites <Icon name="chevron-down" size={14} class="nav-caret" />
+            </a>
+            <div class="mega">
+              <div class="mega__inner">
+                <div class="mega__grid mega__grid--single">
+                  {TRAMITES.map((t) => (
+                    <a href={t.href} class="mega__item">
+                      <span class="mega__icon"><Icon name={t.icon} size={18} /></span>
+                      <span class="mega__body">
+                        <strong>{t.nombre}</strong>
+                        <span class="mega__meta mono">{t.duracion}</span>
+                      </span>
+                      <Icon name="arrow-up-right" size={15} class="mega__arrow" />
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </li>
+
+          {/* Eventos y Noticias ya no son secciones globales: viven dentro
+              de cada carrera, que es donde el estudiante los busca. */}
+          <li><a href="/faq" class:list={['nav-link', { 'is-active': isActive('/faq') }]}>FAQ</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button
+          class="mobile-menu-btn"
+          aria-label="Abrir menú"
+          aria-expanded="false"
+          aria-controls="mobile-drawer"
+          data-drawer-toggle
+        >
+          <span class="burger" aria-hidden="true"><span></span><span></span></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Cajón móvil -->
+<div class="drawer" id="mobile-drawer" data-drawer hidden>
+  <div class="drawer__backdrop" data-drawer-close></div>
+  <nav class="drawer__panel" aria-label="Menú móvil">
+    <div class="drawer__head">
+      <span class="eyebrow eyebrow--plain">Menú</span>
+      <button class="drawer__close" aria-label="Cerrar menú" data-drawer-close>
+        <Icon name="x" size={20} />
+      </button>
+    </div>
+
+    <ul class="drawer__list">
+      <li style="--i:0"><a href="/">Inicio</a></li>
+      <li style="--i:1"><a href="/carreras">Carreras</a></li>
+      <li style="--i:2"><a href="/tramites">Trámites</a></li>
+      <li style="--i:3"><a href="/faq">FAQ</a></li>
+    </ul>
+
+    {/* Acceso directo a las tres carreras: en móvil ahorra un salto */}
+    <div class="drawer__foot" style="--i:4">
+      <span class="drawer__heading mono">Carreras en Quito</span>
+      <ul class="drawer__sublist">
+        {CARRERAS.map((c) => (
+          <li>
+            <a href={c.href}>
+              <Icon name={c.icon} size={16} />
+              {c.nombre}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<script>
+  function initDrawer() {
+    const drawer = document.querySelector<HTMLElement>('[data-drawer]');
+    const toggle = document.querySelector<HTMLButtonElement>('[data-drawer-toggle]');
+    if (!drawer || !toggle) return;
+
+    const open = () => {
+      drawer.hidden = false;
+      // Fuerza un reflow para que la transición de entrada se dispare
+      void drawer.offsetWidth;
+      drawer.classList.add('is-open');
+      toggle.setAttribute('aria-expanded', 'true');
+      toggle.setAttribute('aria-label', 'Cerrar menú');
+      document.body.style.overflow = 'hidden';
+    };
+
+    const close = () => {
+      drawer.classList.remove('is-open');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', 'Abrir menú');
+      document.body.style.overflow = '';
+      // Espera a que termine la transición antes de ocultarlo del árbol a11y
+      window.setTimeout(() => {
+        if (!drawer.classList.contains('is-open')) drawer.hidden = true;
+      }, 420);
+    };
+
+    toggle.addEventListener('click', () =>
+      drawer.classList.contains('is-open') ? close() : open()
+    );
+
+    drawer.querySelectorAll('[data-drawer-close]').forEach((el) =>
+      el.addEventListener('click', close)
+    );
+    // Cualquier enlace navega y cierra
+    drawer.querySelectorAll('a').forEach((el) => el.addEventListener('click', close));
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && drawer.classList.contains('is-open')) close();
+    });
+  }
+
+  document.addEventListener('astro:page-load', initDrawer);
+</script>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+    transition:
+      transform 460ms var(--ease-out-expo),
+      background-color 300ms ease,
+      border-color 300ms ease,
+      box-shadow 300ms ease;
+    border-bottom: 1px solid transparent;
+  }
+
+  /* El contenido pasa por debajo: la cabecera necesita cuerpo suficiente para
+     que los titulares no se lean a través. Sin backdrop-filter, opaca. */
+  .header.is-scrolled {
+    background: var(--surface-header-solid);
+    border-bottom-color: var(--border-color);
+    box-shadow: 0 8px 30px -12px rgba(0, 0, 0, 0.4);
+  }
+
+  @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .header.is-scrolled {
+      background: var(--surface-header);
+      backdrop-filter: blur(18px) saturate(160%);
+      -webkit-backdrop-filter: blur(18px) saturate(160%);
+    }
+  }
+
+  /* Se esconde al bajar, vuelve al subir */
+  .header.is-hidden { transform: translateY(-100%); }
+  /* No la escondas si el usuario está navegando el menú con teclado */
+  .header:focus-within { transform: none; }
+
+  /* ---------- Barra de utilidades ---------- */
+  .utility-bar {
+    background: var(--color-purple-950);
+    color: var(--color-purple-200);
+    font-size: var(--text-xs);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  [data-theme='light'] .utility-bar {
+    background: #14101F;
+    color: #C9C4D6;
+  }
+
+  .utility-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 40px;
+    gap: var(--space-4);
+  }
+
+  .utility-tag {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: 0.6875rem;
+    letter-spacing: var(--tracking-widest);
+    text-transform: uppercase;
+    color: inherit;
+    margin: 0;
+  }
+
+  @media (max-width: 640px) {
+    .utility-tag { display: none; }
+    .utility-container { justify-content: flex-end; }
+  }
+
+  .utility-links {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+  }
+
+  /* ---------- Navegación principal ---------- */
+  .main-nav { padding: var(--space-3) 0; }
+
+  .nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-6);
+  }
+
+  /* Logo */
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-shrink: 0;
+  }
+
+  .logo-mark {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    background: var(--gradient-cta);
+    color: #fff;
+    box-shadow: var(--shadow-accent-glow);
+    transition: transform 500ms var(--ease-out-back);
+  }
+  .logo-mark svg { width: 24px; height: 24px; }
+  .logo:hover .logo-mark { transform: rotate(-8deg) scale(1.06); }
+
+  .logo-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+  }
+  .logo-kicker {
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-widest);
+    color: var(--text-muted);
+  }
+  .logo-text strong {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: 700;
+    letter-spacing: var(--tracking-tight);
+    color: var(--text-primary);
+  }
+
+  @media (max-width: 359px) {
+    .logo-text { display: none; }
+  }
+
+  /* Enlaces */
+  .desktop-nav ul {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+  }
+
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0.55rem 0.85rem;
+    border-radius: var(--radius-full);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: color var(--transition-base), background-color var(--transition-base);
+  }
+  .nav-link:hover { color: var(--text-primary); background: var(--surface-hover); }
+  .nav-link.is-active { color: var(--text-primary); }
+  .nav-link.is-active::before {
+    content: '';
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin-right: 2px;
+  }
+
+  .nav-caret { transition: transform var(--transition-base); opacity: 0.6; }
+  .has-mega:hover .nav-caret { transform: rotate(180deg); }
+
+  @media (max-width: 1023px) {
+    .desktop-nav { display: none; }
+  }
+
+  /* ---------- Mega menú ---------- */
+  .has-mega { position: relative; }
+
+  .mega {
+    position: absolute;
+    top: calc(100% + 12px);
+    left: 50%;
+    width: min(660px, 88vw);
+    transform: translate(-50%, 10px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+      opacity 280ms var(--ease-out-expo),
+      transform 380ms var(--ease-out-expo),
+      visibility 0s linear 380ms;
+  }
+  .has-mega--narrow .mega { width: min(360px, 88vw); }
+
+  .has-mega:hover .mega,
+  .has-mega:focus-within .mega {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translate(-50%, 0);
+    transition-delay: 0s;
+  }
+
+  /* Puente invisible: el cursor puede cruzar el hueco sin cerrar el menú */
+  .mega::before {
+    content: '';
+    position: absolute;
+    top: -14px; left: 0; right: 0;
+    height: 14px;
+  }
+
+  .mega__inner {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-2xl);
+    padding: var(--space-3);
+    overflow: hidden;
+  }
+  [data-theme='dark'] .mega__inner {
+    background: rgba(20, 14, 36, 0.94);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+  }
+
+  .mega__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+  }
+  .mega__grid--single { grid-template-columns: 1fr; }
+
+  .mega__item {
+    --item-accent: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    transition: background-color var(--transition-fast);
+  }
+  .mega__item:hover { background: var(--surface-hover); }
+
+  .mega__icon {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--item-accent) 14%, transparent);
+    color: var(--item-accent);
+    transition: transform 400ms var(--ease-out-back);
+  }
+  .mega__item:hover .mega__icon { transform: scale(1.1) rotate(-6deg); }
+
+  .mega__body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .mega__body strong {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  .mega__meta {
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: var(--text-muted);
+  }
+
+  .mega__arrow {
+    margin-left: auto;
+    opacity: 0;
+    color: var(--item-accent);
+    transform: translate(-4px, 4px);
+    transition: all var(--transition-base);
+    flex-shrink: 0;
+  }
+  .mega__item:hover .mega__arrow { opacity: 1; transform: none; }
+
+  .mega__footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+    padding: var(--space-3);
+    border-top: 1px solid var(--border-color);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--accent-text);
+    transition: gap var(--transition-base);
+  }
+  .mega__footer:hover { gap: var(--space-3); }
+
+  /* ---------- Acciones ---------- */
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-shrink: 0;
+  }
+
+  .mobile-menu-btn {
+    display: none;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    background: var(--surface-card);
+    color: var(--text-primary);
+    transition: border-color var(--transition-base);
+  }
+  .mobile-menu-btn:hover { border-color: var(--accent); }
+
+  @media (max-width: 1023px) {
+    .mobile-menu-btn { display: grid; }
+  }
+
+  /* Hamburguesa animada */
+  .burger {
+    display: block;
+    position: relative;
+    width: 18px;
+    height: 12px;
+  }
+  .burger span {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 1.8px;
+    border-radius: 2px;
+    background: currentColor;
+    transition: transform 380ms var(--ease-out-expo), width 380ms var(--ease-out-expo);
+  }
+  .burger span:nth-child(1) { top: 0; }
+  .burger span:nth-child(2) { bottom: 0; width: 70%; }
+  .mobile-menu-btn:hover .burger span:nth-child(2) { width: 100%; }
+
+  [aria-expanded='true'] .burger span:nth-child(1) { transform: translateY(5px) rotate(45deg); }
+  [aria-expanded='true'] .burger span:nth-child(2) { width: 100%; transform: translateY(-5px) rotate(-45deg); }
+
+  /* ---------- Cajón móvil ---------- */
+  .drawer {
+    position: fixed;
+    inset: 0;
+    z-index: 150;
+  }
+
+  .drawer__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(4, 2, 10, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    opacity: 0;
+    transition: opacity 380ms var(--ease-out-expo);
+  }
+  .drawer.is-open .drawer__backdrop { opacity: 1; }
+
+  .drawer__panel {
+    position: absolute;
+    top: 0; right: 0;
+    height: 100%;
+    width: min(360px, 88vw);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    padding: var(--space-6);
+    background: var(--bg-secondary);
+    border-left: 1px solid var(--border-color);
+    box-shadow: var(--shadow-2xl);
+    transform: translateX(100%);
+    transition: transform 460ms var(--ease-out-expo);
+    overflow-y: auto;
+  }
+  .drawer.is-open .drawer__panel { transform: none; }
+
+  .drawer__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .drawer__close {
+    display: grid;
+    place-items: center;
+    width: 38px; height: 38px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    transition: all var(--transition-base);
+  }
+  .drawer__close:hover { border-color: var(--accent); color: var(--accent-text); }
+
+  .drawer__list { display: flex; flex-direction: column; }
+
+  .drawer__list li,
+  .drawer__foot {
+    opacity: 0;
+    transform: translateX(24px);
+    transition:
+      opacity 500ms var(--ease-out-expo),
+      transform 500ms var(--ease-out-expo);
+    transition-delay: calc(var(--i) * 45ms + 120ms);
+  }
+  .drawer.is-open .drawer__list li,
+  .drawer.is-open .drawer__foot { opacity: 1; transform: none; }
+
+  .drawer__list a {
+    display: block;
+    padding: var(--space-4) 0;
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-color);
+    transition: color var(--transition-base), padding-left var(--transition-base);
+  }
+  .drawer__list a:hover {
+    color: var(--accent-text);
+    padding-left: var(--space-3);
+  }
+
+  .drawer__foot {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding-top: var(--space-6);
+  }
+
+  .drawer__heading {
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-widest);
+    color: var(--text-muted);
+  }
+
+  .drawer__sublist {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+  .drawer__sublist a {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) 0;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: color var(--transition-base), padding-left var(--transition-base);
+  }
+  .drawer__sublist a:hover {
+    color: var(--accent-text);
+    padding-left: var(--space-2);
+  }
+  .drawer__sublist svg { color: var(--text-muted); flex-shrink: 0; }
+  .drawer__sublist a:hover svg { color: var(--accent); }
+</style>

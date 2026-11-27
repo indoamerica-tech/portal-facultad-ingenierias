@@ -1,0 +1,225 @@
+---
+import Icon from '../ui/Icon.astro';
+import { TRAMITES } from '../../data/site';
+---
+
+<section class="section tramites" id="tramites">
+  <div class="blueprint-grid" aria-hidden="true"></div>
+
+  <div class="container">
+    <header class="section-header">
+      <span class="eyebrow" data-reveal="fade">
+        <span class="section-index">02</span> Servicios digitales
+      </span>
+      <h2 data-reveal="up">Todo trámite, en un solo lugar</h2>
+      <p data-reveal="up" data-reveal-delay="1">
+        Requisitos, plazos y formularios. Sin filas, sin adivinar a quién preguntar.
+      </p>
+    </header>
+
+    <div class="bento" data-stagger="60">
+      <!-- Tarjeta destacada: buscador -->
+      <div class="bento__feature card spotlight" data-reveal="scale">
+        <span class="bento__glow" aria-hidden="true"></span>
+        <span class="badge badge-orange">Más consultado</span>
+        <h3>Matrículas 2026</h3>
+        <p>
+          Ordinarias hasta el 8 de agosto. Extraordinarias del 10 al 24, con recargo del 10%.
+        </p>
+        <div class="bento__timeline" aria-hidden="true">
+          <span class="bento__step is-done"><i></i>Ordinaria</span>
+          <span class="bento__step is-active"><i></i>Extraordinaria</span>
+          <span class="bento__step"><i></i>Especial</span>
+        </div>
+        <a href="/tramites/matriculas" class="btn btn-primary btn-sm" data-magnetic="0.2">
+          Iniciar matrícula <Icon name="arrow-right" size={15} />
+        </a>
+      </div>
+
+      {TRAMITES.filter((t) => t.slug !== 'matriculas').map((t) => (
+        <a href={t.href} class="bento__item card spotlight" data-reveal="up">
+          <span class="bento__icon"><Icon name={t.icon} size={20} /></span>
+          <h3>{t.nombre}</h3>
+          <p>{t.descripcion}</p>
+          <span class="bento__foot">
+            <span class="meta-row"><Icon name="clock" size={12} />{t.duracion}</span>
+            <Icon name="arrow-up-right" size={16} class="bento__arrow" />
+          </span>
+        </a>
+      ))}
+    </div>
+
+    <div class="tramites__footer" data-reveal="up">
+      <p class="mono">¿No encuentras tu trámite?</p>
+      <a href="/faq" class="link-arrow">
+        Revisa las preguntas frecuentes <Icon name="arrow-right" size={15} />
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .tramites {
+    position: relative;
+    overflow: hidden;
+    background: var(--bg-secondary);
+    border-block: 1px solid var(--border-color);
+  }
+  [data-theme='dark'] .tramites { background: rgba(255, 255, 255, 0.012); }
+
+  .tramites > .container { position: relative; z-index: 1; }
+
+  .bento {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 680px) {
+    .bento { grid-template-columns: repeat(2, 1fr); }
+    .bento__feature { grid-column: span 2; }
+  }
+  @media (min-width: 1024px) {
+    .bento { grid-template-columns: repeat(3, 1fr); }
+    .bento__feature { grid-column: span 2; grid-row: span 1; }
+  }
+
+  /* ---------- Tarjeta destacada ---------- */
+  .bento__feature {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+    padding: clamp(1.75rem, 3vw, 2.5rem);
+    overflow: hidden;
+    background:
+      radial-gradient(100% 130% at 0% 0%, rgba(234, 96, 10, 0.10) 0%, transparent 60%),
+      var(--surface-card);
+  }
+  [data-theme='light'] .bento__feature {
+    background:
+      radial-gradient(100% 130% at 0% 0%, rgba(234, 96, 10, 0.07) 0%, transparent 60%),
+      #fff;
+  }
+
+  .bento__feature h3 {
+    font-size: var(--text-3xl);
+    letter-spacing: var(--tracking-tighter);
+  }
+  .bento__feature p { max-width: 46ch; }
+
+  .bento__glow {
+    position: absolute;
+    top: -40%; right: -10%;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(234, 96, 10, 0.18), transparent 70%);
+    filter: blur(30px);
+    pointer-events: none;
+    animation: float-element 9s ease-in-out infinite;
+  }
+
+  /* Mini-línea de tiempo del proceso */
+  .bento__timeline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-5);
+    padding-block: var(--space-2);
+  }
+  .bento__step {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: var(--text-muted);
+  }
+  .bento__step i {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border-strong);
+  }
+  .bento__step.is-done i { background: var(--text-muted); border-color: var(--text-muted); }
+  .bento__step.is-active { color: var(--accent-text); }
+  .bento__step.is-active i {
+    background: var(--accent);
+    border-color: var(--accent);
+    animation: live-pulse 2.2s ease-out infinite;
+    box-shadow: 0 0 0 0 rgba(234, 96, 10, 0.5);
+  }
+
+  /* ---------- Ítems ---------- */
+  .bento__item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-6);
+    min-height: 15rem;
+  }
+
+  .bento__icon {
+    display: grid;
+    place-items: center;
+    width: 44px; height: 44px;
+    border-radius: var(--radius-md);
+    background: var(--accent-soft);
+    color: var(--accent-text);
+    border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+    transition: transform 480ms var(--ease-out-back);
+  }
+  .bento__item:hover .bento__icon { transform: scale(1.09) rotate(-6deg); }
+
+  .bento__item h3 {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  .bento__item p {
+    font-size: var(--text-sm);
+    line-height: var(--leading-relaxed);
+    margin: 0;
+  }
+
+  .bento__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--border-color);
+  }
+
+  .bento__arrow {
+    color: var(--text-muted);
+    opacity: 0;
+    transform: translate(-6px, 6px);
+    transition: all 380ms var(--ease-out-expo);
+  }
+  .bento__item:hover .bento__arrow {
+    opacity: 1;
+    transform: none;
+    color: var(--accent-text);
+  }
+
+  /* ---------- Pie ---------- */
+  .tramites__footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3) var(--space-5);
+    margin-top: var(--space-12);
+    padding-top: var(--space-8);
+    border-top: 1px solid var(--border-color);
+  }
+  .tramites__footer p {
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-widest);
+    color: var(--text-muted);
+    margin: 0;
+  }
+</style>

@@ -1,0 +1,76 @@
+---
+import TramiteLayout from '../../layouts/TramiteLayout.astro';
+import ProcessStepper from '../../components/interactive/ProcessStepper.tsx';
+
+const steps = [
+  {
+    number: 1,
+    title: "Solicitud de Carta de Presentación",
+    badge: "Estudiante",
+    badgeType: "purple",
+    content: "Llenar el formulario de solicitud en el SGA. Adjuntar copia de cédula, certificado de matrícula y aceptar el compromiso de confidencialidad."
+  },
+  {
+    number: 2,
+    title: "Emisión y Entrega",
+    badge: "Secretaría",
+    badgeType: "orange",
+    content: "Secretaría emite la carta de presentación dirigida a la empresa. El estudiante la descarga desde el SGA y la entrega en la empresa receptora."
+  },
+  {
+    number: 3,
+    title: "Desarrollo y Seguimiento",
+    badge: "Tutor Académico",
+    badgeType: "purple",
+    content: "El estudiante realiza sus prácticas (mínimo 240 horas). El tutor académico realizará al menos una visita o reunión de seguimiento con el supervisor empresarial."
+  },
+  {
+    number: 4,
+    title: "Evaluación y Validación",
+    badge: "Coordinación",
+    badgeType: "success",
+    content: "Entrega del informe final firmado por el supervisor de la empresa. La coordinación de carrera valida las horas y las registra en el sistema."
+  }
+];
+---
+
+<TramiteLayout
+  title="Prácticas Preprofesionales"
+  description="Proceso para la acreditación de horas de prácticas preprofesionales obligatorias."
+  icon="briefcase"
+>
+  <div class="content-block">
+    <h3>Requisitos Previos</h3>
+    <ul>
+      <li>Haber aprobado al menos el 50% de la malla curricular (aplica desde 5to semestre).</li>
+      <li>Estar legalmente matriculado en el periodo académico vigente.</li>
+      <li>La empresa debe tener un convenio marco o específico vigente con la Universidad.</li>
+    </ul>
+
+    <div class="stepper-wrapper">
+      <ProcessStepper client:load steps={steps} />
+    </div>
+  </div>
+</TramiteLayout>
+
+<style>
+  .content-block {
+    margin-top: var(--space-8);
+  }
+  .content-block h3 {
+    margin-bottom: var(--space-4);
+  }
+  .content-block ul {
+    list-style-type: disc;
+    padding-left: var(--space-6);
+    margin-bottom: var(--space-12);
+    color: var(--text-secondary);
+    line-height: var(--leading-relaxed);
+  }
+  .content-block li {
+    margin-bottom: var(--space-2);
+  }
+  .stepper-wrapper {
+    margin-top: var(--space-12);
+  }
+</style>

@@ -1,0 +1,138 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import PageHero from '../components/sections/PageHero.astro';
+import Icon from '../components/ui/Icon.astro';
+
+/* Preguntas centradas en los trámites, que es el alcance de esta fase.
+   Las de admisiones quedan fuera hasta que se incorpore esa sección. */
+const faqs = [
+  {
+    q: "¿Qué carreras se imparten en el campus Quito?",
+    a: "Ingeniería Industrial (presencial y semipresencial), Tecnologías de la Información e Ingeniería Eléctrica. Cada carrera tiene su propia página con la malla, los eventos y las noticias que le corresponden."
+  },
+  {
+    q: "¿Qué opciones de titulación existen?",
+    a: "Ofrecemos tres modalidades de titulación: Trabajo de Integración Curricular (Tesis), Examen de Grado de Carácter Complexivo y Artículo Científico. El detalle de cada una está en el trámite de Titulación."
+  },
+  {
+    q: "¿Cuánto tiempo tengo para justificar una falta?",
+    a: "Tienes 72 horas hábiles desde la inasistencia para presentar la justificación con su documento de respaldo. Pasado ese plazo la solicitud no procede."
+  },
+  {
+    q: "¿Dónde consulto el horario de clases?",
+    a: "En el trámite de Horarios encuentras el horario vigente por carrera, nivel y paralelo, junto con las fechas en que se publica cada periodo."
+  },
+  {
+    q: "¿Cuántas horas de prácticas y vinculación debo completar?",
+    a: "240 horas de prácticas preprofesionales y 160 horas de vinculación con la sociedad. Ambas se realizan en instituciones con convenio vigente y se cierran con un informe final."
+  }
+];
+---
+<PageLayout title="Preguntas Frecuentes" description="Resuelve tus dudas sobre la Facultad de Ingenierías">
+  <PageHero
+    eyebrow="Ayuda"
+    index="06"
+    title="Preguntas frecuentes"
+    highlight="frecuentes"
+    lead="Encuentra respuestas rápidas a las consultas más comunes de nuestros estudiantes y aspirantes."
+  />
+
+  <div class="container section">
+
+    <div class="faq-list">
+      {faqs.map((faq, index) => (
+        <details class="faq-item" data-animate data-animate-delay={index}>
+          <summary class="faq-question">
+            {faq.q}
+            <Icon name="chevron-down" class="faq-icon" size={20} />
+          </summary>
+          <div class="faq-answer">
+            <p>{faq.a}</p>
+          </div>
+        </details>
+      ))}
+    </div>
+  </div>
+</PageLayout>
+
+<style>
+  .section {
+    padding: var(--space-20) 0;
+    max-width: 800px;
+  }
+  .faq-header {
+    text-align: center;
+    margin-bottom: var(--space-12);
+  }
+  .faq-header h1 {
+    font-size: var(--text-4xl);
+    margin-bottom: var(--space-4);
+  }
+  .text-orange {
+    color: var(--color-orange-500);
+  }
+  .faq-header p {
+    color: var(--text-secondary);
+    font-size: var(--text-lg);
+  }
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+  .faq-item {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: box-shadow var(--transition-base);
+  }
+  .faq-item:hover {
+    box-shadow: var(--shadow-sm);
+    border-color: var(--color-neutral-300);
+  }
+  [data-theme='dark'] .faq-item:hover {
+    border-color: var(--color-neutral-600);
+  }
+  .faq-question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-5) var(--space-6);
+    font-weight: 600;
+    font-size: var(--text-lg);
+    cursor: pointer;
+    list-style: none; /* Hide default arrow */
+    user-select: none;
+  }
+  .faq-question::-webkit-details-marker {
+    display: none;
+  }
+  .faq-icon {
+    transition: transform var(--transition-base);
+    color: var(--text-secondary);
+  }
+  details[open] .faq-icon {
+    transform: rotate(180deg);
+  }
+  details[open] .faq-question {
+    border-bottom: 1px solid var(--border-color);
+    color: var(--color-orange-500);
+  }
+  .faq-answer {
+    padding: var(--space-5) var(--space-6);
+    color: var(--text-secondary);
+    line-height: var(--leading-relaxed);
+    animation: slideDown 0.3s ease-out;
+  }
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>

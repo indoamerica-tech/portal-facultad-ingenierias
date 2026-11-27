@@ -1,0 +1,61 @@
+---
+import Icon from './Icon.astro';
+
+/**
+ * Aviso de contenido pendiente.
+ *
+ * Se usa donde antes había un botón de descarga que apuntaba a "#" o a una
+ * página inexistente. Un botón muerto es peor que ausencia de botón: el
+ * estudiante hace clic, no pasa nada, y pierde la confianza en el portal.
+ * Cuando llegue el archivo real, se sustituye este bloque por el enlace.
+ */
+interface Props {
+  titulo: string;
+  icon?: string;
+}
+
+const { titulo, icon = 'file-text' } = Astro.props;
+---
+
+<div class="pending" role="status">
+  <span class="pending__icon"><Icon name={icon} size={20} /></span>
+  <div class="pending__body">
+    <h4>{titulo}</h4>
+    <p><slot /></p>
+  </div>
+</div>
+
+<style>
+  .pending {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-4);
+    padding: var(--space-5);
+    margin-top: var(--space-6);
+    border-radius: var(--radius-lg);
+    border: 1px dashed color-mix(in srgb, var(--accent) 40%, transparent);
+    background: var(--accent-soft);
+  }
+
+  .pending__icon {
+    display: grid;
+    place-items: center;
+    width: 40px; height: 40px;
+    flex-shrink: 0;
+    border-radius: var(--radius-md);
+    background: var(--bg-secondary);
+    color: var(--accent-text);
+  }
+
+  .pending__body h4 {
+    font-size: var(--text-base);
+    font-weight: 600;
+    margin-bottom: var(--space-2);
+  }
+  .pending__body p {
+    font-size: var(--text-sm);
+    line-height: var(--leading-relaxed);
+    margin: 0;
+    max-width: 62ch;
+  }
+</style>

@@ -1,0 +1,73 @@
+---
+import '../styles/global.css';
+import SEOHead from '../components/layout/SEOHead.astro';
+import { versioned } from '../consts';
+import { ClientRouter } from 'astro:transitions';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  type?: 'website' | 'article';
+  /** Desactiva la textura de grano (p.ej. en páginas de impresión) */
+  grain?: boolean;
+}
+
+const { title, description, image, type, grain = true } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es" data-theme="dark" class="no-js">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {/* SVG para navegadores modernos; .ico de reserva (Safari antiguo, favoritos) */}
+    <link rel="icon" type="image/svg+xml" href={versioned('/favicon.svg')} />
+    <link rel="icon" type="image/x-icon" href={versioned('/favicon.ico')} sizes="16x16 32x32 48x48" />
+    <link rel="apple-touch-icon" href={versioned('/apple-touch-icon.png')} />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#0A0120" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#F7F5F2" media="(prefers-color-scheme: light)" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <ClientRouter />
+
+    {/* Se ejecuta antes del primer pintado: evita el destello de tema */}
+    <script is:inline>
+      (() => {
+        const stored = localStorage.getItem('theme');
+        const theme = stored === 'light' || stored === 'dark' ? stored : 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
+
+    <SEOHead title={title} description={description} image={image} type={type} />
+  </head>
+
+  <body class={grain ? 'grain' : ''}>
+    <a href="#main" class="skip-link">Saltar al contenido principal</a>
+    <div class="scroll-progress" aria-hidden="true"></div>
+
+    <slot />
+
+    <script>
+      import { initMotion, teardownMotion } from '../scripts/motion';
+
+      // Primera carga y cada navegación con transiciones de vista
+      document.addEventListener('astro:page-load', initMotion);
+      document.addEventListener('astro:before-swap', teardownMotion);
+
+      // El tema se re-aplica tras el swap porque <html> persiste,
+      // pero el atributo puede perderse en algunas transiciones.
+      document.addEventListener('astro:after-swap', () => {
+        const stored = localStorage.getItem('theme');
+        document.documentElement.setAttribute(
+          'data-theme',
+          stored === 'light' ? 'light' : 'dark'
+        );
+      });
+    </script>
+  </body>
+</html>

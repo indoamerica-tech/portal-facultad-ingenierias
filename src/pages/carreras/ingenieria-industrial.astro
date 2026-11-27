@@ -1,0 +1,220 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import Icon from '../../components/ui/Icon.astro';
+import Button from '../../components/ui/Button.astro';
+import Card from '../../components/ui/Card.astro';
+import CareerNews from '../../components/sections/CareerNews.astro';
+---
+<PageLayout title="Ingeniería Industrial" description="Carrera de Ingeniería Industrial en el campus Quito">
+  <div class="career-hero">
+    <div class="container hero-content">
+      <span class="badge badge-orange">Presencial / Semipresencial</span>
+      <h1 class="career-title">Ingeniería <span class="text-orange">Industrial</span></h1>
+      <p class="career-desc">Optimiza procesos, gestiona recursos y lidera la transformación productiva y de servicios con un enfoque integral y sostenible.</p>
+      <div class="career-meta">
+        <span><Icon name="clock" size={18}/> 9 Semestres</span>
+        <span><Icon name="map-pin" size={18}/> Campus Quito</span>
+      </div>
+      <div class="career-actions">
+        <Button href="/tramites" variant="primary">Ver trámites</Button>
+        <Button href="#novedades" variant="outline">Eventos y noticias</Button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container section">
+    <div class="grid-layout">
+      <div class="main-column">
+        <h2>Perfil Profesional</h2>
+        <p>El Ingeniero Industrial graduado de la Universidad Indoamérica será capaz de:</p>
+        <div class="skills-grid">
+          <Card class="skill-card">
+            <Icon name="briefcase" size={24} class="skill-icon" />
+            <h4>Optimización de Procesos</h4>
+            <p>Mejorar la eficiencia y productividad en líneas de manufactura y servicios.</p>
+          </Card>
+          <Card class="skill-card">
+            <Icon name="users" size={24} class="skill-icon" />
+            <h4>Gestión del Talento</h4>
+            <p>Liderar equipos multidisciplinarios bajo normas de seguridad industrial.</p>
+          </Card>
+        </div>
+
+        <h2 class="mt-12">Malla Curricular Resumida</h2>
+        <div class="malla-list">
+          <details class="malla-item">
+            <summary>Nivel Básico (Semestres 1-3)</summary>
+            <ul>
+              <li>Matemáticas Aplicadas</li>
+              <li>Física Industrial</li>
+              <li>Estadística Descriptiva</li>
+              <li>Dibujo Técnico</li>
+            </ul>
+          </details>
+          <details class="malla-item">
+            <summary>Nivel Profesional (Semestres 4-7)</summary>
+            <ul>
+              <li>Investigación de Operaciones</li>
+              <li>Control de Calidad</li>
+              <li>Gestión de la Producción</li>
+              <li>Logística y Supply Chain</li>
+            </ul>
+          </details>
+          <details class="malla-item">
+            <summary>Nivel de Titulación (Semestres 8-9)</summary>
+            <ul>
+              <li>Formulación de Proyectos</li>
+              <li>Gestión Ambiental Industrial</li>
+              <li>Trabajo de Titulación</li>
+            </ul>
+          </details>
+        </div>
+      </div>
+      
+      <div class="side-column">
+        <Card class="info-card" glow={false}>
+          <h3>Campo Laboral</h3>
+          <ul class="campo-list">
+            <li><Icon name="arrow-right" size={16}/> Gerencia de Operaciones</li>
+            <li><Icon name="arrow-right" size={16}/> Consultoría de Calidad</li>
+            <li><Icon name="arrow-right" size={16}/> Logística y Distribución</li>
+            <li><Icon name="arrow-right" size={16}/> Seguridad Industrial</li>
+          </ul>
+        </Card>
+      </div>
+    </div>
+  </div>
+
+  <CareerNews slug="ingenieria-industrial" />
+</PageLayout>
+
+<style>
+  .career-hero {
+    background-color: var(--bg-tertiary);
+    padding: var(--space-20) 0;
+    border-bottom: 1px solid var(--border-color);
+  }
+  .career-hero .hero-content {
+    max-width: 800px;
+  }
+  .career-title {
+    font-size: var(--text-5xl);
+    margin: var(--space-4) 0;
+  }
+  .text-orange {
+    color: var(--color-orange-500);
+  }
+  .career-desc {
+    font-size: var(--text-lg);
+    color: var(--text-secondary);
+    margin-bottom: var(--space-6);
+    line-height: var(--leading-relaxed);
+  }
+  .career-meta {
+    display: flex;
+    gap: var(--space-6);
+    margin-bottom: var(--space-8);
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+  .career-meta span {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .career-actions {
+    display: flex;
+    gap: var(--space-4);
+  }
+  
+  .section {
+    padding: var(--space-16) 0;
+  }
+  .grid-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-12);
+  }
+  @media (min-width: 992px) {
+    .grid-layout {
+      grid-template-columns: 2fr 1fr;
+    }
+  }
+  
+  .main-column h2 {
+    margin-bottom: var(--space-6);
+    font-size: var(--text-3xl);
+  }
+  .main-column p {
+    color: var(--text-secondary);
+    margin-bottom: var(--space-8);
+  }
+  .mt-12 {
+    margin-top: var(--space-12);
+  }
+  
+  .skills-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+  @media (min-width: 640px) {
+    .skills-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .skill-card {
+    padding: var(--space-6);
+  }
+  .skill-icon {
+    color: var(--color-orange-500);
+    margin-bottom: var(--space-4);
+  }
+  
+  .malla-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .malla-item {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+  }
+  .malla-item summary {
+    padding: var(--space-4);
+    font-weight: 600;
+    cursor: pointer;
+    background: var(--bg-tertiary);
+  }
+  .malla-item ul {
+    padding: var(--space-4) var(--space-8);
+    list-style: disc;
+    color: var(--text-secondary);
+  }
+  .malla-item li {
+    margin-bottom: var(--space-2);
+  }
+  
+  .info-card {
+    position: sticky;
+    top: 100px;
+  }
+  .info-card h3 {
+    margin-bottom: var(--space-4);
+  }
+  .campo-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  .campo-list li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--text-secondary);
+  }
+  .campo-list li svg {
+    color: var(--color-purple-500);
+  }
+</style>

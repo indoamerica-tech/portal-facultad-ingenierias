@@ -1,0 +1,369 @@
+---
+import Icon from '../ui/Icon.astro';
+import { CARRERAS, TRAMITES } from '../../data/site';
+
+const year = new Date().getFullYear();
+
+const socials = [
+  { name: 'facebook', href: 'https://facebook.com/uti.edu.ec', label: 'Facebook' },
+  { name: 'instagram', href: 'https://instagram.com/uti.edu.ec', label: 'Instagram' },
+  { name: 'linkedin', href: 'https://linkedin.com/school/uti', label: 'LinkedIn' },
+  { name: 'youtube', href: 'https://youtube.com/@uti', label: 'YouTube' },
+];
+---
+
+<footer class="footer">
+  <div class="aurora" aria-hidden="true">
+    <span class="aurora__blob aurora__blob--b"></span>
+  </div>
+
+  <!-- Llamado a la acción sobre el footer -->
+  <div class="container">
+    <section class="cta" data-reveal="scale">
+      <div class="blueprint-grid" aria-hidden="true"></div>
+      <div class="cta__content">
+        <span class="eyebrow">Campus Quito</span>
+        <h2 class="cta__title">
+          Construye lo que<br /><span class="text-gradient">todavía no existe</span>
+        </h2>
+        <p class="cta__text">
+          Tres carreras, laboratorios reales y una red de empresas esperando tu primer proyecto.
+        </p>
+        <div class="cta__actions">
+          <a href="/carreras" class="btn btn-primary btn-lg" data-magnetic="0.25">
+            Explorar carreras
+            <Icon name="arrow-right" size={17} />
+          </a>
+          <a href="/tramites" class="btn btn-outline btn-lg">
+            Ver trámites
+          </a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Cuerpo del footer -->
+  <div class="container footer__body">
+    <div class="footer__brand" data-reveal="up">
+      <a href="/" class="footer__logo" aria-label="Inicio">
+        <span class="logo-mark" aria-hidden="true">
+          <svg viewBox="0 0 64 64" fill="none">
+            <path d="M32 17 16 46h32z" stroke="currentColor" stroke-width="3.4" stroke-linejoin="round"/>
+            <circle cx="32" cy="17" r="7.2" fill="currentColor"/>
+            <circle cx="16" cy="46" r="7.2" fill="currentColor"/>
+            <circle cx="48" cy="46" r="7.2" fill="currentColor"/>
+          </svg>
+        </span>
+        <span>
+          <span class="footer__kicker mono">Facultad de</span>
+          <strong>Ingenierías</strong>
+        </span>
+      </a>
+      <p class="footer__blurb">
+        Universidad Tecnológica Indoamérica. Formamos ingenieras e ingenieros que resuelven
+        los problemas del Ecuador con criterio técnico y responsabilidad social.
+      </p>
+
+      {/* Datos del campus Quito, tomados del sitio institucional.
+          El campus matriz de Ambato queda fuera del alcance de esta fase. */}
+      <ul class="footer__contact">
+        <li>
+          <Icon name="map-pin" size={15} />
+          <span>Machala y Sabanilla, sector Quito norte — Ecuador</span>
+        </li>
+        <li>
+          <Icon name="mail" size={15} />
+          <a href="mailto:ingenierias@uti.edu.ec" class="link-underline">ingenierias@uti.edu.ec</a>
+        </li>
+        <li>
+          <Icon name="phone" size={15} />
+          <a href="tel:+59323826970" class="link-underline">(02) 382 6970</a>
+        </li>
+      </ul>
+    </div>
+
+    <nav class="footer__col" data-reveal="up" data-reveal-delay="1" aria-label="Carreras">
+      <h3 class="footer__heading mono">Carreras</h3>
+      <ul>
+        {CARRERAS.map((c) => (
+          <li><a href={c.href} class="footer__link">{c.nombreCorto}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <nav class="footer__col" data-reveal="up" data-reveal-delay="2" aria-label="Trámites">
+      <h3 class="footer__heading mono">Trámites</h3>
+      <ul>
+        {TRAMITES.map((t) => (
+          <li><a href={t.href} class="footer__link">{t.nombre}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <nav class="footer__col" data-reveal="up" data-reveal-delay="3" aria-label="Recursos">
+      <h3 class="footer__heading mono">Recursos</h3>
+      <ul>
+        <li><a href="/faq" class="footer__link">Preguntas frecuentes</a></li>
+        <li>
+          <a href="https://uti.edu.ec" target="_blank" rel="noopener" class="footer__link">
+            Sitio institucional <Icon name="arrow-up-right" size={12} />
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- Marca gigante como textura tipográfica -->
+  <div class="footer__wordmark" aria-hidden="true">
+    <span>INGENIERÍAS</span>
+  </div>
+
+  <div class="container footer__bottom">
+    <p class="footer__legal mono">
+      © {year} Universidad Tecnológica Indoamérica · Todos los derechos reservados
+    </p>
+    <ul class="footer__socials">
+      {socials.map((s) => (
+        <li>
+          <a href={s.href} target="_blank" rel="noopener" aria-label={s.label}>
+            <Icon name={s.name} size={16} />
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    position: relative;
+    overflow: hidden;
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border-color);
+    padding-top: var(--space-24);
+  }
+  [data-theme='dark'] .footer { background: #080118; }
+
+  .footer > .container { position: relative; z-index: 1; }
+
+  /* ---------- CTA ---------- */
+  .cta {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-3xl);
+    border: 1px solid var(--border-color);
+    background:
+      radial-gradient(120% 120% at 50% 0%, rgba(234, 96, 10, 0.16) 0%, transparent 55%),
+      var(--gradient-hero);
+    padding: clamp(2.5rem, 6vw, 5.5rem) var(--space-6);
+    text-align: center;
+    box-shadow: var(--shadow-2xl);
+  }
+
+  .cta__content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-5);
+  }
+
+  .cta__title {
+    font-size: var(--text-6xl);
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: var(--tracking-tighter);
+  }
+
+  .cta__text {
+    max-width: 44ch;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: var(--text-lg);
+  }
+
+  .cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-4);
+    margin-top: var(--space-2);
+  }
+  /* Dentro del CTA el fondo siempre es oscuro, aunque el tema sea claro */
+  .cta__actions .btn-outline {
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.28);
+  }
+  .cta__actions .btn-outline:hover {
+    color: #fff;
+    border-color: #fff;
+  }
+
+  /* ---------- Cuerpo ---------- */
+  .footer__body {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-10);
+    padding-block: var(--space-20) var(--space-16);
+  }
+
+  @media (min-width: 720px) {
+    .footer__body { grid-template-columns: repeat(3, 1fr); }
+    .footer__brand { grid-column: span 3; }
+  }
+  @media (min-width: 1024px) {
+    .footer__body { grid-template-columns: 2.2fr 1fr 1fr 1fr; }
+    .footer__brand { grid-column: auto; }
+  }
+
+  .footer__logo {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-5);
+  }
+  .logo-mark {
+    display: grid;
+    place-items: center;
+    width: 40px; height: 40px;
+    border-radius: var(--radius-md);
+    background: var(--gradient-cta);
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .logo-mark svg { width: 24px; height: 24px; }
+  .footer__kicker {
+    display: block;
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-widest);
+    color: var(--text-muted);
+    line-height: 1.2;
+  }
+  .footer__logo strong {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    color: var(--text-primary);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .footer__blurb {
+    max-width: 42ch;
+    font-size: var(--text-sm);
+    line-height: var(--leading-relaxed);
+    margin-bottom: var(--space-6);
+  }
+
+  .footer__contact {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  .footer__contact li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+  }
+  .footer__contact svg {
+    flex-shrink: 0;
+    margin-top: 3px;
+    color: var(--accent);
+  }
+
+  .footer__heading {
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-widest);
+    color: var(--text-muted);
+    margin-bottom: var(--space-5);
+    font-weight: 500;
+  }
+
+  .footer__col ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .footer__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    transition: color var(--transition-base), transform var(--transition-base);
+  }
+  .footer__link:hover {
+    color: var(--accent-text);
+    transform: translateX(3px);
+  }
+  .footer__link svg { opacity: 0.5; }
+
+  /* ---------- Marca gigante ---------- */
+  .footer__wordmark {
+    position: relative;
+    z-index: 0;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    line-height: 0.78;
+    pointer-events: none;
+    user-select: none;
+    margin-bottom: -0.12em;
+  }
+  .footer__wordmark span {
+    font-family: var(--font-display);
+    /* 11.5vw mantiene "INGENIERÍAS" (11 caracteres) dentro del viewport;
+       por encima de eso se recorta por los lados y parece un error. */
+    font-size: clamp(2rem, 11.5vw, 11rem);
+    font-weight: 800;
+    letter-spacing: var(--tracking-tighter);
+    white-space: nowrap;
+    background: linear-gradient(180deg, var(--border-strong) 0%, transparent 88%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  /* ---------- Barra inferior ---------- */
+  .footer__bottom {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding-block: var(--space-6);
+    border-top: 1px solid var(--border-color);
+  }
+
+  .footer__legal {
+    font-size: 0.6875rem;
+    color: var(--text-muted);
+    letter-spacing: var(--tracking-wide);
+  }
+
+  .footer__socials {
+    display: flex;
+    gap: var(--space-2);
+  }
+  .footer__socials a {
+    display: grid;
+    place-items: center;
+    width: 36px; height: 36px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    transition: all var(--transition-base);
+  }
+  .footer__socials a:hover {
+    color: #fff;
+    background: var(--accent);
+    border-color: var(--accent);
+    transform: translateY(-3px);
+  }
+</style>

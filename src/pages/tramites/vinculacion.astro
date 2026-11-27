@@ -1,0 +1,76 @@
+---
+import TramiteLayout from '../../layouts/TramiteLayout.astro';
+import ProcessStepper from '../../components/interactive/ProcessStepper.tsx';
+
+const steps = [
+  {
+    number: 1,
+    title: "Inscripción en Proyecto",
+    badge: "Estudiante",
+    badgeType: "purple",
+    content: "Revisar la oferta de proyectos de vinculación aprobados por la facultad y solicitar inscripción con el docente director del proyecto."
+  },
+  {
+    number: 2,
+    title: "Aprobación y Cronograma",
+    badge: "Director",
+    badgeType: "orange",
+    content: "El director del proyecto aprueba la participación y elabora el cronograma de actividades a realizar en la comunidad o institución beneficiaria."
+  },
+  {
+    number: 3,
+    title: "Ejecución de Actividades",
+    badge: "Campo",
+    badgeType: "success",
+    content: "Cumplimiento de las 160 horas (o las requeridas según la malla) en actividades directas con la comunidad, documentando la asistencia con actas y fotografías."
+  },
+  {
+    number: 4,
+    title: "Informe y Certificación",
+    badge: "Coordinación",
+    badgeType: "purple",
+    content: "Entrega del portafolio de evidencias. La Dirección de Vinculación emite el certificado oficial que acredita las horas cumplidas."
+  }
+];
+---
+
+<TramiteLayout
+  title="Vinculación con la Sociedad"
+  description="Proceso para la participación en proyectos comunitarios y acreditación de horas de vinculación."
+  icon="handshake"
+>
+  <div class="content-block">
+    <h3>Requisitos Previos</h3>
+    <ul>
+      <li>Estar matriculado a partir de 4to semestre (varía según la malla de la carrera).</li>
+      <li>No tener impedimentos académicos o sanciones disciplinarias.</li>
+      <li>Disponibilidad de tiempo fuera de la jornada regular de clases para salidas de campo.</li>
+    </ul>
+
+    <div class="stepper-wrapper">
+      <ProcessStepper client:load steps={steps} />
+    </div>
+  </div>
+</TramiteLayout>
+
+<style>
+  .content-block {
+    margin-top: var(--space-8);
+  }
+  .content-block h3 {
+    margin-bottom: var(--space-4);
+  }
+  .content-block ul {
+    list-style-type: disc;
+    padding-left: var(--space-6);
+    margin-bottom: var(--space-12);
+    color: var(--text-secondary);
+    line-height: var(--leading-relaxed);
+  }
+  .content-block li {
+    margin-bottom: var(--space-2);
+  }
+  .stepper-wrapper {
+    margin-top: var(--space-12);
+  }
+</style>

@@ -1,0 +1,10 @@
+node_modules
+dist
+.astro
+.git
+.vscode
+docs
+info_entregada
+*.log
+diag.mjs
+entregables

@@ -1,0 +1,28 @@
+services:
+  web:
+    build: .
+    image: facultad-ingenierias:latest
+    container_name: facultad-web
+    restart: unless-stopped
+    networks:
+      - coolify
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=coolify
+
+      # HTTP -> redirección a HTTPS (middleware que ya define Coolify)
+      - traefik.http.routers.http-facultad.entryPoints=http
+      - traefik.http.routers.http-facultad.rule=Host(`facultad.indoamericatech.com`)
+      - traefik.http.routers.http-facultad.middlewares=redirect-to-https
+
+      # HTTPS con certificado de Let's Encrypt
+      - traefik.http.routers.https-facultad.entryPoints=https
+      - traefik.http.routers.https-facultad.rule=Host(`facultad.indoamericatech.com`)
+      - traefik.http.routers.https-facultad.tls=true
+      - traefik.http.routers.https-facultad.tls.certresolver=letsencrypt
+
+      - traefik.http.services.facultad.loadbalancer.server.port=80
+
+networks:
+  coolify:
+    external: true

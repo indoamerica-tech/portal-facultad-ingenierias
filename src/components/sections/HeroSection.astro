@@ -1,0 +1,531 @@
+---
+import Icon from '../ui/Icon.astro';
+import { CARRERAS, STATS } from '../../data/site';
+---
+
+<section class="hero">
+  <!-- Atmósfera -->
+  <div class="hero__bg" aria-hidden="true">
+    <div class="aurora">
+      <span class="aurora__blob aurora__blob--a"></span>
+      <span class="aurora__blob aurora__blob--b"></span>
+      <span class="aurora__blob aurora__blob--c"></span>
+    </div>
+    <div class="blueprint-grid"></div>
+    <canvas class="hero__canvas" data-hero-canvas></canvas>
+    <div class="hero__vignette"></div>
+  </div>
+
+  <div class="container hero__container">
+    <!-- Columna de contenido -->
+    <div class="hero__content">
+      <span class="eyebrow" data-reveal="fade">
+        <span class="live-dot"></span>
+        Campus Quito · Periodo 2026
+      </span>
+
+      <h1 class="hero__title">
+        <span class="hero__title-line" data-reveal="mask"><span>Ingeniería que</span></span>
+        <span class="hero__title-line" data-reveal="mask" data-reveal-delay="1"
+          ><span><em>se construye</em></span></span
+        >
+        <span class="hero__title-line" data-reveal="mask" data-reveal-delay="2"
+          ><span>haciendo.</span></span
+        >
+      </h1>
+
+      <p class="hero__lead" data-reveal="up" data-reveal-delay="3">
+        Tres carreras en Quito, laboratorios encendidos y proyectos que salen del aula hacia
+        la industria. Así se forma la próxima generación de ingenieras e ingenieros del Ecuador.
+      </p>
+
+      <div class="hero__actions" data-reveal="up" data-reveal-delay="4">
+        <a href="/carreras" class="btn btn-primary btn-lg" data-magnetic="0.25">
+          Explorar carreras
+          <Icon name="arrow-right" size={17} />
+        </a>
+        <a href="/tramites" class="btn btn-outline btn-lg">
+          <Icon name="clipboard-list" size={17} />
+          Trámites y procesos
+        </a>
+      </div>
+
+      <!-- Franja de métricas -->
+      <dl class="hero__stats" data-reveal="up" data-reveal-delay="5">
+        {STATS.map((s) => (
+          <div class="hero__stat">
+            <dt class="stat-number">
+              <span
+                data-counter={s.value}
+                data-counter-prefix={s.prefix ?? ''}
+                data-counter-suffix={s.suffix ?? ''}
+              >{s.prefix ?? ''}0{s.suffix ?? ''}</span>
+            </dt>
+            <dd class="stat-label">{s.label}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+
+    <!-- Panel técnico: ficha de carrera que rota sola -->
+    <aside class="hero__panel" data-reveal="scale" data-reveal-delay="3" aria-label="Carreras destacadas">
+      <div class="panel border-glow" data-tilt="5">
+        <header class="panel__head">
+          <span class="panel__dots" aria-hidden="true">
+            <i></i><i></i><i></i>
+          </span>
+          <span class="panel__title mono">facultad_ingenierias.spec</span>
+        </header>
+
+        <div class="panel__body">
+          {CARRERAS.map((c, i) => (
+            <article
+              class="spec"
+              data-spec
+              data-active={i === 0 ? 'true' : 'false'}
+              style={`--spec-accent:${c.color}`}
+            >
+              <div class="spec__icon"><Icon name={c.icon} size={22} /></div>
+
+              <h2 class="spec__name">{c.nombre}</h2>
+              <p class="spec__desc">{c.descripcion}</p>
+
+              <dl class="spec__meta">
+                <div><dt class="mono">Campus</dt><dd>{c.campus}</dd></div>
+                <div><dt class="mono">Modalidad</dt><dd>{c.modalidad}</dd></div>
+                <div><dt class="mono">Duración</dt><dd>{c.duracion}</dd></div>
+              </dl>
+
+              <ul class="spec__tags">
+                {c.destacados.map((d) => <li class="mono">{d}</li>)}
+              </ul>
+
+              <a href={c.href} class="spec__link link-arrow">
+                Ver malla curricular <Icon name="arrow-right" size={15} />
+              </a>
+            </article>
+          ))}
+        </div>
+
+        <footer class="panel__foot">
+          <div class="panel__progress" aria-hidden="true"><span data-spec-bar></span></div>
+          <div class="panel__nav" role="tablist" aria-label="Seleccionar carrera">
+            {CARRERAS.map((c, i) => (
+              <button
+                class="panel__pip"
+                data-spec-pip
+                role="tab"
+                aria-selected={i === 0 ? 'true' : 'false'}
+                aria-label={c.nombre}
+              ></button>
+            ))}
+          </div>
+        </footer>
+      </div>
+    </aside>
+  </div>
+
+  <a href="#contenido" class="hero__scroll" aria-label="Bajar al contenido">
+    <span class="mono">Scroll</span>
+    <span class="hero__scroll-line" aria-hidden="true"></span>
+  </a>
+</section>
+
+<script>
+  import { initHeroCanvas } from '../../scripts/hero-canvas';
+
+  let disposeCanvas: (() => void) | null = null;
+  let specTimer: number | undefined;
+
+  function initHero() {
+    /* ---- Lienzo de la red de nodos ---- */
+    const canvas = document.querySelector<HTMLCanvasElement>('[data-hero-canvas]');
+    if (canvas) disposeCanvas = initHeroCanvas(canvas);
+
+    /* ---- Carrusel de fichas técnicas ---- */
+    const specs = Array.from(document.querySelectorAll<HTMLElement>('[data-spec]'));
+    const pips = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-spec-pip]'));
+    const bar = document.querySelector<HTMLElement>('[data-spec-bar]');
+    if (!specs.length) return;
+
+    const INTERVAL = 4200;
+    let index = 0;
+
+    const show = (next: number) => {
+      specs[index].dataset.active = 'false';
+      pips[index]?.setAttribute('aria-selected', 'false');
+      index = (next + specs.length) % specs.length;
+      specs[index].dataset.active = 'true';
+      pips[index]?.setAttribute('aria-selected', 'true');
+
+      // Reinicia la animación de la barra de progreso
+      if (bar) {
+        bar.style.animation = 'none';
+        void bar.offsetWidth;
+        bar.style.animation = '';
+      }
+    };
+
+    const play = () => {
+      window.clearInterval(specTimer);
+      specTimer = window.setInterval(() => show(index + 1), INTERVAL);
+    };
+
+    pips.forEach((pip, i) =>
+      pip.addEventListener('click', () => {
+        show(i);
+        play();
+      })
+    );
+
+    const panel = document.querySelector<HTMLElement>('.panel');
+    panel?.addEventListener('pointerenter', () => window.clearInterval(specTimer));
+    panel?.addEventListener('pointerleave', play);
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduced) play();
+  }
+
+  function disposeHero() {
+    disposeCanvas?.();
+    disposeCanvas = null;
+    window.clearInterval(specTimer);
+  }
+
+  document.addEventListener('astro:page-load', initHero);
+  document.addEventListener('astro:before-swap', disposeHero);
+</script>
+
+<style>
+  .hero {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    align-items: center;
+    min-height: min(100svh, 60rem);
+    padding-block: clamp(4rem, 10vh, 8rem) var(--space-16);
+    overflow: hidden;
+  }
+
+  /* ---------------- Fondo ---------------- */
+  .hero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+
+  .hero__canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.55;
+  }
+  [data-theme='light'] .hero__canvas { opacity: 0.35; }
+
+  .hero__vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 100% 70% at 50% 45%, transparent 40%, var(--bg-primary) 100%);
+  }
+
+  /* ---------------- Rejilla ---------------- */
+  .hero__container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(3rem, 6vw, 5rem);
+    align-items: center;
+  }
+
+  @media (min-width: 1080px) {
+    .hero__container {
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.85fr);
+      gap: clamp(2.5rem, 4vw, 4rem);
+    }
+  }
+
+  /* ---------------- Contenido ---------------- */
+  .hero__content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-6);
+  }
+
+  /* Calibrado para que "Ingeniería que" (la línea más larga) quepa sin
+     romperse: en la columna de ~660px del desktop y en 320px de móvil.
+     Si sube el máximo o el mínimo, la línea se parte y el efecto se rompe. */
+  .hero__title {
+    font-size: clamp(2.15rem, 1.2rem + 4.9vw, 5rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: var(--tracking-tighter);
+    margin: var(--space-1) 0 var(--space-2);
+  }
+
+  .hero__title-line {
+    display: block;
+    white-space: nowrap;
+  }
+
+  /* La palabra que carga el concepto: cursiva + acento.
+     La serifa cursiva de Fraunces ya es el énfasis; el subrayado que había
+     aquí cortaba la cola de la "y" y se leía como un error, no como recurso. */
+  .hero__title em {
+    font-style: italic;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .hero__lead {
+    max-width: 52ch;
+    font-size: var(--text-lg);
+    line-height: var(--leading-relaxed);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    margin-top: var(--space-1);
+  }
+
+  /* ---------------- Métricas ---------------- */
+  .hero__stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-6) var(--space-8);
+    width: 100%;
+    margin-top: var(--space-8);
+    padding-top: var(--space-8);
+    border-top: 1px solid var(--border-color);
+  }
+
+  .hero__stat { display: flex; flex-direction: column; gap: var(--space-1); }
+  .hero__stat .stat-number { font-size: var(--text-3xl); }
+  .hero__stat dd { margin: 0; }
+
+  /* ---------------- Panel técnico ---------------- */
+  .hero__panel { width: 100%; }
+
+  .panel {
+    position: relative;
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--border-color);
+    background: var(--surface-glass);
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    box-shadow: var(--shadow-2xl);
+    overflow: hidden;
+  }
+  [data-theme='light'] .panel { background: rgba(255, 255, 255, 0.86); }
+
+  .panel__head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--border-color);
+    background: var(--surface-card);
+  }
+
+  .panel__dots { display: flex; gap: 6px; }
+  .panel__dots i {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--border-strong);
+  }
+  .panel__dots i:first-child { background: var(--accent); }
+
+  .panel__title {
+    font-size: 0.6875rem;
+    color: var(--text-muted);
+    letter-spacing: var(--tracking-wide);
+  }
+
+  /* Las fichas se apilan; solo una está visible */
+  .panel__body {
+    position: relative;
+    display: grid;
+    padding: var(--space-6);
+    min-height: 24rem;
+  }
+
+  .spec {
+    grid-area: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+    opacity: 0;
+    transform: translateY(14px);
+    visibility: hidden;
+    transition:
+      opacity 520ms var(--ease-out-expo),
+      transform 620ms var(--ease-out-expo),
+      visibility 0s linear 620ms;
+  }
+  .spec[data-active='true'] {
+    opacity: 1;
+    transform: none;
+    visibility: visible;
+    transition-delay: 0s;
+  }
+
+  .spec__icon {
+    display: grid;
+    place-items: center;
+    width: 48px; height: 48px;
+    border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--spec-accent) 15%, transparent);
+    color: var(--spec-accent);
+    border: 1px solid color-mix(in srgb, var(--spec-accent) 30%, transparent);
+  }
+
+  .spec__name {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    letter-spacing: var(--tracking-tight);
+    text-wrap: balance;
+  }
+
+  .spec__desc {
+    font-size: var(--text-sm);
+    line-height: var(--leading-relaxed);
+    margin: 0;
+  }
+
+  .spec__meta {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-3);
+    width: 100%;
+    padding-block: var(--space-4);
+    border-block: 1px solid var(--border-color);
+  }
+  .spec__meta dt {
+    font-size: 0.5625rem;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-widest);
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  .spec__meta dd {
+    margin: 0;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.35;
+  }
+
+  .spec__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .spec__tags li {
+    padding: 0.3rem 0.6rem;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border-color);
+    font-size: 0.625rem;
+    letter-spacing: var(--tracking-wide);
+    color: var(--text-secondary);
+    background: var(--surface-card);
+  }
+
+  .spec__link { margin-top: auto; color: var(--spec-accent); }
+
+  /* Pie: progreso + navegación */
+  .panel__foot {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-3) var(--space-4);
+    border-top: 1px solid var(--border-color);
+    background: var(--surface-card);
+  }
+
+  .panel__progress {
+    flex: 1;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--border-color);
+    overflow: hidden;
+  }
+  .panel__progress span {
+    display: block;
+    height: 100%;
+    width: 100%;
+    background: var(--gradient-cta);
+    transform-origin: left;
+    animation: spec-progress 4200ms linear infinite;
+  }
+  @keyframes spec-progress {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+  }
+  /* Al detener el carrusel, la barra también se detiene */
+  .panel:hover .panel__progress span { animation-play-state: paused; }
+
+  .panel__nav { display: flex; gap: 6px; }
+  .panel__pip {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--border-strong);
+    cursor: pointer;
+    transition: all 320ms var(--ease-out-expo);
+  }
+  .panel__pip[aria-selected='true'] {
+    width: 20px;
+    border-radius: 3px;
+    background: var(--accent);
+  }
+  .panel__pip:hover { background: var(--accent); }
+
+  /* ---------------- Indicador de scroll ---------------- */
+  .hero__scroll {
+    position: absolute;
+    left: 50%;
+    bottom: var(--space-6);
+    transform: translateX(-50%);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: 0.5625rem;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-widest);
+    color: var(--text-muted);
+    transition: color var(--transition-base);
+  }
+  .hero__scroll:hover { color: var(--accent-text); }
+
+  @media (min-width: 1080px) {
+    .hero__scroll { display: flex; }
+  }
+
+  .hero__scroll-line {
+    position: relative;
+    width: 1px;
+    height: 42px;
+    background: var(--border-color);
+    overflow: hidden;
+  }
+  .hero__scroll-line::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--accent);
+    animation: scroll-trace 2s var(--ease-in-out-expo) infinite;
+  }
+  @keyframes scroll-trace {
+    0%        { transform: translateY(-100%); }
+    50%, 100% { transform: translateY(100%); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .panel__progress span,
+    .hero__scroll-line::after { animation: none; }
+    .spec { transition: none; }
+  }
+</style>

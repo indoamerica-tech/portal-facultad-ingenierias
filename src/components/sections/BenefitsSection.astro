@@ -1,0 +1,158 @@
+---
+import Icon from '../ui/Icon.astro';
+import { PILARES } from '../../data/site';
+---
+
+<section class="section pilares">
+  <div class="aurora" aria-hidden="true">
+    <span class="aurora__blob aurora__blob--a"></span>
+  </div>
+
+  <div class="container pilares__grid">
+    <!-- Columna pegajosa: el argumento -->
+    <div class="pilares__intro">
+      <div class="pilares__sticky">
+        <span class="eyebrow" data-reveal="fade">
+          <span class="section-index">03</span> Por qué aquí
+        </span>
+        <h2 data-reveal="up">
+          La ingeniería no se<br />aprende <span class="text-gradient">mirando</span>
+        </h2>
+        <p class="lead" data-reveal="up" data-reveal-delay="1">
+          Se aprende con el circuito armado, la estructura calculada y el código en producción.
+          Todo lo demás es teoría esperando su turno.
+        </p>
+        <a href="/carreras" class="btn btn-outline" data-reveal="up" data-reveal-delay="2">
+          Conocer la Facultad
+          <Icon name="arrow-right" size={16} />
+        </a>
+      </div>
+    </div>
+
+    <!-- Columna de pilares -->
+    <ol class="pilares__list" data-stagger="90">
+      {PILARES.map((p, i) => (
+        <li class="pilar spotlight" data-reveal="left">
+          <span class="pilar__num mono">{String(i + 1).padStart(2, '0')}</span>
+          <span class="pilar__icon"><Icon name={p.icon} size={20} /></span>
+          <div class="pilar__body">
+            <h3>{p.titulo}</h3>
+            <p>{p.descripcion}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .pilares {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pilares__grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(3rem, 6vw, 6rem);
+    align-items: start;
+  }
+
+  @media (min-width: 960px) {
+    .pilares__grid { grid-template-columns: 0.9fr 1.1fr; }
+  }
+
+  .pilares__sticky {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-5);
+  }
+
+  @media (min-width: 960px) {
+    .pilares__sticky {
+      position: sticky;
+      top: calc(var(--header-h) + var(--space-10));
+    }
+  }
+
+  .pilares__sticky h2 { font-size: var(--text-5xl); }
+
+  /* ---------- Lista ---------- */
+  .pilares__list {
+    display: flex;
+    flex-direction: column;
+    counter-reset: pilar;
+  }
+
+  .pilar {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    align-items: start;
+    gap: var(--space-5);
+    padding: var(--space-8) var(--space-5);
+    border-top: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    transition: background-color var(--transition-base);
+  }
+  .pilar:last-child { border-bottom: 1px solid var(--border-color); }
+
+  @media (max-width: 520px) {
+    .pilar {
+      grid-template-columns: auto 1fr;
+      gap: var(--space-4);
+    }
+    .pilar__num { display: none; }
+  }
+
+  .pilar__num {
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-widest);
+    color: var(--text-muted);
+    padding-top: 0.9rem;
+    transition: color var(--transition-base);
+  }
+  .pilar:hover .pilar__num { color: var(--accent); }
+
+  .pilar__icon {
+    display: grid;
+    place-items: center;
+    width: 46px; height: 46px;
+    flex-shrink: 0;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    background: var(--surface-card);
+    color: var(--text-secondary);
+    transition:
+      transform 520ms var(--ease-out-back),
+      color var(--transition-base),
+      border-color var(--transition-base),
+      background-color var(--transition-base);
+  }
+  .pilar:hover .pilar__icon {
+    transform: scale(1.08) rotate(-6deg);
+    color: var(--accent-text);
+    border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+    background: var(--accent-soft);
+  }
+
+  .pilar__body { display: flex; flex-direction: column; gap: var(--space-2); }
+
+  .pilar__body h3 {
+    font-size: var(--text-xl);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+    transition: color var(--transition-base);
+  }
+  .pilar:hover .pilar__body h3 { color: var(--accent-text); }
+
+  .pilar__body p {
+    font-size: var(--text-sm);
+    line-height: var(--leading-relaxed);
+    max-width: 52ch;
+    margin: 0;
+  }
+</style>

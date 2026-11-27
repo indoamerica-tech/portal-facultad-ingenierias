@@ -17,9 +17,7 @@ const isActive = (href: string) =>
         Universidad Tecnológica Indoamérica
       </p>
       {/* Aula Virtual, SGA y Correo quedan fuera del alcance de esta fase */}
-      <div class="utility-links">
-        <ThemeToggle client:load />
-      </div>
+      <div class="utility-links"></div>
     </div>
   </div>
 
@@ -27,6 +25,9 @@ const isActive = (href: string) =>
   <div class="main-nav">
     <div class="container nav-container">
       <a href="/" class="logo" aria-label="Inicio — Facultad de Ingenierías">
+        <img src="/marca/uti-logo-color-800.png" alt="Universidad Indoamérica" class="logo-uti logo-uti--color" width="137" height="34" />
+        <img src="/marca/uti-logo-light-800.png" alt="Universidad Indoamérica" class="logo-uti logo-uti--claro" width="137" height="34" />
+        <span class="logo-sep" aria-hidden="true"></span>
         <span class="logo-mark" aria-hidden="true">
           {/* Misma triada de nodos que el favicon */}
           <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
@@ -101,6 +102,7 @@ const isActive = (href: string) =>
       </nav>
 
       <div class="nav-actions">
+        <ThemeToggle client:load />
         <button
           class="mobile-menu-btn"
           aria-label="Abrir menú"

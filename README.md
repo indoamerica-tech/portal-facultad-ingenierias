@@ -22,6 +22,29 @@ npm run build     # genera ./dist
 npm run preview   # sirve ./dist en local
 ```
 
+## Sitio de desarrollo (dev-facultad)
+
+Cada push a `main` se publica solo en https://dev-facultad.indoamericatech.com
+(GitHub Actions: `.github/workflows/desplegar-dev.yml`). El flujo compila primero con
+`npm run build`: si falla, no se publica nada y el dev sigue con la versión anterior.
+El progreso se ve en la pestaña **Actions** del repositorio. Producción
+(facultad.indoamericatech.com) no cambia con estos push.
+
+Desde el servidor, la cuenta de desarrollo solo puede consultar el dev:
+
+```sh
+ssh cristofer.paez@94.72.115.39          # estado, últimos despliegues y registro de nginx
+ssh cristofer.paez@94.72.115.39 build    # build de prueba con su salida completa
+```
+
+## Tema visual INGENIAX
+
+El diseño sigue a la web de INGENIAX (ingeniax.indoamericatech.com): tema claro lavanda y
+durazno, tipografía Outfit, titulares con la palabra fuerte en degradado, botones píldora y
+pie morado. Todo vive en `src/styles/ingeniax.css`, que se carga después de `global.css`
+y cambia sobre todo variables; los componentes no se reescribieron. El modo oscuro sigue
+disponible con el interruptor de la cabecera.
+
 ## Estructura
 
 ```text

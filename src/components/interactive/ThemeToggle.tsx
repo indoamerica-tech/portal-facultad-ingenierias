@@ -5,12 +5,12 @@ type Theme = 'light' | 'dark';
 
 /** Estilos en `components.css` (.theme-toggle) — aquí solo el comportamiento. */
 export default function ThemeToggle() {
-  const [theme, setTheme] = useState<Theme>('dark');
+  const [theme, setTheme] = useState<Theme>('light');
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     const current = document.documentElement.getAttribute('data-theme');
-    setTheme(current === 'light' ? 'light' : 'dark');
+    setTheme(current === 'dark' ? 'dark' : 'light');
     setMounted(true);
   }, []);
 

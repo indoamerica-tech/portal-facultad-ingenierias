@@ -14,7 +14,7 @@
 /* Los ejes SOFT y WONK hay que pedirlos explícitamente: Google Fonts fija a su
    valor por defecto (0) cualquier eje que no aparezca en la URL, y entonces
    `font-variation-settings: 'WONK' 1` no haría nada. */
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,400..900,0..100,0..1;1,9..144,400..900,0..100,0..1&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+/* Tema INGENIAX: la fuente (Outfit) se carga en ingeniax.css */
 
 :root {
   --font-display: 'Fraunces', 'Roboto Slab', Georgia, serif;

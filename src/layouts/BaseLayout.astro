@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import '../styles/ingeniax.css';
 import SEOHead from '../components/layout/SEOHead.astro';
 import { versioned } from '../consts';
 import { ClientRouter } from 'astro:transitions';
@@ -17,7 +18,7 @@ const { title, description, image, type, grain = true } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="es" data-theme="dark" class="no-js">
+<html lang="es" data-theme="light" class="no-js">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -26,11 +27,11 @@ const { title, description, image, type, grain = true } = Astro.props;
     <link rel="icon" type="image/x-icon" href={versioned('/favicon.ico')} sizes="16x16 32x32 48x48" />
     <link rel="apple-touch-icon" href={versioned('/apple-touch-icon.png')} />
     <meta name="generator" content={Astro.generator} />
-    <meta name="theme-color" content="#0A0120" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#F7F5F2" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#f7f3fc" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@200..900&display=swap" />
 
     <ClientRouter />
 
@@ -38,7 +39,7 @@ const { title, description, image, type, grain = true } = Astro.props;
     <script is:inline>
       (() => {
         const stored = localStorage.getItem('theme');
-        const theme = stored === 'light' || stored === 'dark' ? stored : 'dark';
+        const theme = stored === 'light' || stored === 'dark' ? stored : 'light';
         document.documentElement.setAttribute('data-theme', theme);
       })();
     </script>
@@ -65,7 +66,7 @@ const { title, description, image, type, grain = true } = Astro.props;
         const stored = localStorage.getItem('theme');
         document.documentElement.setAttribute(
           'data-theme',
-          stored === 'light' ? 'light' : 'dark'
+          stored === 'dark' ? 'dark' : 'light'
         );
       });
     </script>

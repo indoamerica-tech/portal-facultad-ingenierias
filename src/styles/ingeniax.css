@@ -1,0 +1,375 @@
+/* ============================================================
+   TEMA INGENIAX — dev-facultad (2026-11-27)
+
+   Lleva el portal al mismo lenguaje visual de la web de INGENIAX
+   (ingeniax.indoamericatech.com): fondo claro lavanda/durazno, Outfit,
+   titulares morados con la palabra fuerte en degradado naranja→morado,
+   botones píldora durazno, tarjetas blancas, cinta inclinada y pie morado.
+
+   Va en una capa aparte para no reescribir los componentes: casi todo se
+   resuelve cambiando variables. Las reglas puntuales usan `html[data-theme]`
+   delante para ganarle a los <style> con ámbito de cada componente.
+   Quitar este archivo (y su @import en global.css) devuelve el diseño anterior.
+   ============================================================ */
+
+
+:root {
+  /* Paleta INGENIAX */
+  --ix-ink: #2b1a47;          /* texto principal */
+  --ix-ink-2: #62557d;        /* texto secundario */
+  --ix-ink-3: #8a7fa3;
+  --ix-lavanda: #f7f3fc;      /* fondo */
+  --ix-lavanda-2: #efe3fb;
+  --ix-durazno: #ffe6d6;
+  --ix-naranja: #f68d52;      /* botón */
+  --ix-naranja-fuerte: #d9590c;
+  --ix-morado: #3c235f;
+  --ix-morado-medio: #8a4fb8;
+  --ix-linea: rgba(60, 35, 95, 0.13);
+  --ix-sombra: 0 20px 50px -36px rgba(60, 35, 95, 0.45);
+  --ix-degradado-texto: linear-gradient(100deg, #d9590c 0%, #e2702a 22%, #8a4fb8 48%, #3c235f 70%, #d9590c 100%);
+  --ix-cinta: linear-gradient(90deg, #f68d52, #f9a774 30%, #e9a6c8, #c9b2ee 80%, #f68d52);
+
+  /* Tipografía: Outfit en todo, como INGENIAX */
+  --font-display: 'Outfit', system-ui, sans-serif;
+  --font-heading: 'Outfit', system-ui, sans-serif;
+  --font-body: 'Outfit', system-ui, sans-serif;
+  --font-mono: 'Outfit', system-ui, sans-serif;
+  --tracking-tighter: -0.02em;
+  --tracking-tight: -0.015em;
+
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+  --radius-3xl: 28px;
+
+  --gradient-cta: linear-gradient(180deg, #f8995f, #f68d52);
+  --shadow-accent-glow: 0 14px 30px -16px rgba(217, 89, 12, 0.55);
+  --shadow-inset-hi: inset 0 1px 0 rgba(255, 255, 255, 0.45);
+
+  /* Carreras en tonos que se leen sobre claro */
+  --c-industrial: #e2702a;
+  --c-electricidad: #3f7fd9;
+  --c-ti: #8a4fb8;
+}
+
+/* ---------- Tema claro INGENIAX (por defecto) ---------- */
+[data-theme='light'] {
+  --bg-primary: var(--ix-lavanda);
+  --bg-secondary: #ffffff;
+  --bg-tertiary: var(--ix-lavanda-2);
+  --bg-elevated: #ffffff;
+
+  --text-primary: var(--ix-ink);
+  --text-secondary: var(--ix-ink-2);
+  --text-muted: var(--ix-ink-3);
+
+  --border-color: var(--ix-linea);
+  --border-strong: rgba(60, 35, 95, 0.22);
+  --grid-color: transparent;
+
+  --accent: var(--ix-naranja-fuerte);
+  --accent-soft: rgba(246, 141, 82, 0.16);
+  --accent-text: var(--ix-naranja-fuerte);
+
+  --surface-glass: rgba(255, 255, 255, 0.72);
+  --surface-header: rgba(247, 243, 252, 0.86);
+  --surface-header-solid: var(--ix-lavanda);
+  --surface-card: #ffffff;
+  --surface-hover: rgba(60, 35, 95, 0.05);
+
+  --glow-a: rgba(201, 178, 238, 0.55);
+  --glow-b: rgba(255, 200, 165, 0.6);
+  --noise-opacity: 0;
+
+  --shadow-md: 0 8px 24px -14px rgba(60, 35, 95, 0.3);
+  --shadow-lg: var(--ix-sombra);
+  --shadow-xl: 0 30px 60px -36px rgba(60, 35, 95, 0.5);
+  --shadow-2xl: 0 40px 80px -40px rgba(60, 35, 95, 0.55);
+}
+
+/* ---------- Tema oscuro: el morado de la primera INGENIAX ---------- */
+[data-theme='dark'] {
+  --bg-primary: #180e2b;
+  --bg-secondary: #24163f;
+  --bg-tertiary: #2f1b4c;
+  --bg-elevated: #2f1b4c;
+  --text-primary: #f4f1f9;
+  --text-secondary: #c9bce0;
+  --text-muted: #9d8cbd;
+  --accent: #f68d52;
+  --accent-text: #f9a774;
+  --surface-header: rgba(24, 14, 43, 0.85);
+  --surface-header-solid: #180e2b;
+  --glow-a: rgba(138, 79, 184, 0.35);
+  --glow-b: rgba(246, 141, 82, 0.18);
+  --noise-opacity: 0;
+  --ix-degradado-texto: linear-gradient(100deg, #f68d52 0%, #f9a774 30%, #c9b2ee 60%, #f68d52 100%);
+}
+
+/* ---------- Fondo pastel con manchas de luz ---------- */
+html[data-theme='light'] body {
+  background:
+    radial-gradient(60vw 50vw at 0% 0%, rgba(201, 178, 238, 0.35), transparent 60%),
+    radial-gradient(50vw 40vw at 100% 30%, rgba(255, 214, 190, 0.45), transparent 60%),
+    var(--ix-lavanda);
+  background-attachment: fixed;
+}
+html[data-theme] .blueprint-grid,
+html[data-theme] .hero__canvas { display: none; }
+
+/* ---------- Tipografía ---------- */
+html[data-theme] h1,
+html[data-theme] h2,
+html[data-theme] h3,
+html[data-theme] h4 {
+  font-family: var(--font-display);
+  font-variation-settings: normal;
+  font-weight: 600;
+  letter-spacing: var(--tracking-tighter);
+}
+html[data-theme] h1 { font-weight: 600; line-height: 0.95; }
+
+/* La palabra fuerte del titular: 800 + degradado que se desliza despacio */
+html[data-theme] h1 em,
+html[data-theme] h2 em,
+html[data-theme] h1 strong,
+html[data-theme] h2 strong,
+html[data-theme] .text-gradient {
+  font-style: normal;
+  font-weight: 800;
+  background: var(--ix-degradado-texto);
+  background-size: 260% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: ix-degradado 9s ease-in-out infinite alternate;
+}
+@keyframes ix-degradado { from { background-position: 0% 50%; } to { background-position: 100% 50%; } }
+
+html[data-theme] p { font-weight: 400; }
+
+/* Etiquetas: píldora durazno como las fechas de INGENIAX */
+html[data-theme] .eyebrow {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 12.5px;
+  letter-spacing: 0.06em;
+  color: var(--text-primary);
+  background: var(--ix-durazno);
+  border: 1px solid var(--ix-naranja);
+  border-radius: 99px;
+  padding: 7px 14px;
+}
+html[data-theme] .eyebrow::before { display: none; }
+html[data-theme='dark'] .eyebrow { background: rgba(246, 141, 82, 0.14); color: #ffd9c2; }
+html[data-theme] .section-index { font-weight: 600; letter-spacing: 0.08em; color: var(--ix-naranja-fuerte); }
+html[data-theme] .mono { letter-spacing: 0.02em; }
+
+/* ---------- Botones ---------- */
+html[data-theme] .btn {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 99px;
+}
+html[data-theme] .btn-lg { padding: 0.95rem 1.5rem; }
+html[data-theme] .btn-primary {
+  background: var(--ix-naranja);
+  color: var(--ix-ink);
+  box-shadow: var(--shadow-inset-hi), var(--shadow-accent-glow);
+}
+html[data-theme] .btn-primary:hover {
+  background: #f8995f;
+  box-shadow: var(--shadow-inset-hi), 0 18px 36px -16px rgba(217, 89, 12, 0.7);
+}
+html[data-theme='light'] .btn-outline,
+html[data-theme='light'] .btn-ghost {
+  background: rgba(255, 255, 255, 0.55);
+  border-color: rgba(60, 35, 95, 0.22);
+  color: var(--ix-ink);
+  font-weight: 500;
+}
+html[data-theme='light'] .btn-outline:hover { border-color: var(--ix-naranja); color: var(--ix-naranja-fuerte); }
+
+/* ---------- Tarjetas y superficies ---------- */
+html[data-theme='light'] .card,
+html[data-theme='light'] .glass {
+  background: #ffffff;
+  border: 1px solid var(--ix-linea);
+  border-radius: 16px;
+  box-shadow: var(--ix-sombra);
+}
+html[data-theme='light'] .card:hover { border-color: rgba(246, 141, 82, 0.6); }
+html[data-theme='light'] .chip,
+html[data-theme='light'] .badge { border-radius: 99px; }
+html[data-theme='light'] .badge-orange { background: var(--ix-durazno); color: var(--ix-naranja-fuerte); }
+html[data-theme='light'] .badge-purple { background: var(--ix-lavanda-2); color: var(--ix-morado); }
+
+/* ---------- Cabecera ---------- */
+html[data-theme] .utility-bar { display: none; }
+html[data-theme] .header { --header-h: 4.6rem; }
+html[data-theme] .logo-uti { height: 34px; width: auto; }
+html[data-theme='dark'] .logo-uti--color,
+html[data-theme='light'] .logo-uti--claro { display: none; }
+html[data-theme] .logo-sep {
+  width: 1px; height: 30px; background: var(--border-strong); flex-shrink: 0;
+}
+html[data-theme] .logo-mark { display: none; }
+html[data-theme] .logo-kicker { font-weight: 500; letter-spacing: 0.04em; text-transform: none; }
+html[data-theme] .logo-text strong { font-family: var(--font-display); font-weight: 800; letter-spacing: -0.01em; }
+html[data-theme] .desktop-nav > ul {
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid var(--ix-linea);
+  border-radius: 99px;
+  padding: 4px;
+  backdrop-filter: blur(10px);
+}
+html[data-theme='dark'] .desktop-nav > ul { background: rgba(36, 22, 63, 0.6); }
+html[data-theme] .nav-link { font-weight: 500; font-size: 15px; border-radius: 99px; color: var(--text-secondary); }
+html[data-theme] .nav-link.is-active { background: var(--ix-durazno); color: var(--ix-ink); }
+html[data-theme] .nav-link.is-active::before { display: none; }
+html[data-theme='dark'] .nav-link.is-active { background: rgba(246, 141, 82, 0.18); color: #fff; }
+html[data-theme] .nav-actions .theme-toggle { margin-right: 6px; }
+
+/* ---------- Portada ---------- */
+html[data-theme] .hero__foto {
+  position: absolute;
+  inset: 0 0 0 auto;
+  width: min(68vw, 1100px);
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 45%), linear-gradient(0deg, transparent 0%, #000 30%);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(90deg, transparent 0%, #000 45%), linear-gradient(0deg, transparent 0%, #000 30%);
+  mask-composite: intersect;
+  opacity: 0.85;
+}
+html[data-theme='dark'] .hero__foto { opacity: 0.35; }
+html[data-theme] .hero__vignette {
+  background: linear-gradient(90deg, var(--bg-primary) 0%, color-mix(in srgb, var(--bg-primary) 70%, transparent) 40%, transparent 75%);
+}
+html[data-theme] .hero__title { font-weight: 600; line-height: 0.95; }
+html[data-theme] .hero__title em { font-weight: 800; }
+html[data-theme] .hero__lead { color: var(--text-primary); font-size: 1.125rem; }
+html[data-theme] .stat-number { font-family: var(--font-display); font-weight: 300; letter-spacing: -0.02em; }
+html[data-theme] .stat-label { font-family: var(--font-body); font-weight: 600; letter-spacing: 0.08em; }
+
+/* Ficha de carrera: tarjeta blanca de vidrio sobre la foto */
+html[data-theme='light'] .panel {
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--ix-linea);
+  border-radius: 20px;
+  box-shadow: var(--shadow-xl);
+}
+html[data-theme] .panel__title { font-weight: 600; }
+
+/* ---------- Cinta inclinada (marquesina) ---------- */
+html[data-theme] .strip {
+  background: var(--ix-cinta);
+  border: 0;
+  padding-block: 14px;
+  transform: rotate(-1.2deg) scale(1.02);
+  margin-block: 18px;
+  z-index: 2;
+}
+html[data-theme] .strip .mono,
+html[data-theme] .strip__item {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.3rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--ix-ink);
+}
+html[data-theme] .strip__plus { display: none; }
+html[data-theme] .strip__item::after {
+  content: '';
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--ix-ink);
+  margin-left: var(--space-8);
+}
+html[data-theme] .strip .marquee { mask-image: none; -webkit-mask-image: none; }
+
+/* ---------- Pie morado ---------- */
+html[data-theme] .footer {
+  background: #2b1a47;
+  border-top: 0;
+  color: #f4f1f9;
+  --text-primary: #f4f1f9;
+  --text-secondary: #d3c8e6;
+  --text-muted: #a99bc4;
+  --border-color: rgba(244, 241, 249, 0.16);
+  --border-strong: rgba(244, 241, 249, 0.3);
+  --surface-hover: rgba(244, 241, 249, 0.06);
+}
+html[data-theme] .footer .logo-uti--color { display: none; }
+html[data-theme] .footer .logo-uti--claro { display: block; }
+html[data-theme] .footer .cta {
+  background:
+    radial-gradient(120% 120% at 50% 0%, rgba(246, 141, 82, 0.28) 0%, transparent 55%),
+    linear-gradient(160deg, #3c235f, #24163f);
+  border-color: rgba(244, 241, 249, 0.14);
+}
+
+/* ---------- Ajustes tras la primera revisión ---------- */
+html[data-theme] .eyebrow { align-self: flex-start; width: fit-content; }
+html[data-theme] .section-header--center .eyebrow { align-self: center; }
+
+/* Sobre el morado del pie, el degradado va de naranja a lila (como la INGENIAX oscura) */
+html[data-theme] .footer { --ix-degradado-texto: linear-gradient(100deg, #f68d52 0%, #f9a774 30%, #e9a6c8 55%, #c9b2ee 80%, #f68d52 100%); }
+html[data-theme] .footer .eyebrow { color: #2b1a47; background: var(--ix-durazno); }
+html[data-theme] .footer .btn-outline,
+html[data-theme] .footer .btn-ghost {
+  background: transparent;
+  color: #f4f1f9;
+  border-color: rgba(244, 241, 249, 0.4);
+}
+html[data-theme] .footer .btn-outline:hover { border-color: var(--ix-naranja); color: #fff; }
+
+/* Cabecera de cada trámite: franja pastel como las páginas de reto de INGENIAX */
+html[data-theme] .tramite-header {
+  background:
+    radial-gradient(60% 120% at 100% 0%, rgba(255, 214, 190, 0.7), transparent 60%),
+    linear-gradient(135deg, var(--ix-durazno), var(--ix-lavanda-2));
+  color: var(--ix-ink);
+  border-bottom: 1px solid var(--ix-linea);
+}
+html[data-theme] .tramite-header h1 {
+  color: var(--ix-ink);
+  -webkit-text-fill-color: currentColor;
+  background: none;
+  animation: none;
+  font-weight: 600;
+}
+html[data-theme] .tramite-header .description { color: var(--ix-ink-2); }
+html[data-theme] .tramite-header .icon-wrapper { background: #fff; color: var(--ix-naranja-fuerte); box-shadow: var(--ix-sombra); }
+html[data-theme='dark'] .tramite-header { background: linear-gradient(135deg, #2f1b4c, #24163f); color: #f4f1f9; }
+html[data-theme='dark'] .tramite-header h1 { color: #f4f1f9; }
+html[data-theme='dark'] .tramite-header .description { color: #c9bce0; }
+html[data-theme] .tramite-content h2 { color: var(--text-primary); }
+html[data-theme] .tramite-content h2::after {
+  content: ''; display: block; width: 44px; height: 4px; border-radius: 99px;
+  background: var(--ix-cinta); margin-top: 10px;
+}
+
+/* Móvil: la foto se aparta del texto y la cabecera cabe en 360 px */
+@media (max-width: 760px) {
+  html[data-theme] .hero__foto {
+    width: 100%; height: 46%;
+    -webkit-mask-image: linear-gradient(0deg, transparent 0%, #000 60%);
+    mask-image: linear-gradient(0deg, transparent 0%, #000 60%);
+    opacity: 0.22;
+  }
+}
+@media (max-width: 520px) {
+  html[data-theme] .logo { gap: 8px; }
+  html[data-theme] .logo-uti { height: 28px; }
+  html[data-theme] .logo-kicker { display: none; }
+  html[data-theme] .logo-text strong { font-size: 1rem; }
+}

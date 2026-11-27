@@ -17,9 +17,7 @@ const isActive = (href: string) =>
         Universidad Tecnológica Indoamérica
       </p>
       {/* Aula Virtual, SGA y Correo quedan fuera del alcance de esta fase */}
-      <div class="utility-links">
-        <ThemeToggle client:load />
-      </div>
+      <div class="utility-links"></div>
     </div>
   </div>
 
@@ -46,6 +44,8 @@ const isActive = (href: string) =>
       </a>
 
       <nav class="desktop-nav" aria-label="Navegación principal">
+        {/* Pastilla que se desliza bajo el enlace señalado (como en INGENIAX) */}
+        <span class="nav-pastilla" aria-hidden="true" data-nav-pastilla></span>
         <ul>
           <li><a href="/" class:list={['nav-link', { 'is-active': isActive('/') }]}>Inicio</a></li>
 
@@ -104,6 +104,10 @@ const isActive = (href: string) =>
       </nav>
 
       <div class="nav-actions">
+        <ThemeToggle client:load />
+        <a href="/carreras" class="btn btn-primary cta-barra">
+          Explorar carreras <Icon name="arrow-right" size={15} />
+        </a>
         <button
           class="mobile-menu-btn"
           aria-label="Abrir menú"
@@ -116,6 +120,7 @@ const isActive = (href: string) =>
       </div>
     </div>
   </div>
+  <div class="progreso-lectura" aria-hidden="true"><i data-progreso-lectura></i></div>
 </header>
 
 <!-- Cajón móvil -->
@@ -196,6 +201,65 @@ const isActive = (href: string) =>
   }
 
   document.addEventListener('astro:page-load', initDrawer);
+</script>
+
+<script>
+  /* Menú al estilo INGENIAX: a todo el ancho arriba y, pasados 100 px, se encoge a una
+     cápsula centrada que baja un poco; pastilla que sigue al cursor y línea de lectura. */
+  let quitarCabecera: (() => void) | null = null;
+
+  function initCabecera() {
+    quitarCabecera?.();
+    const header = document.querySelector<HTMLElement>('[data-header]');
+    const nav = header?.querySelector<HTMLElement>('.desktop-nav');
+    const pastilla = header?.querySelector<HTMLElement>('[data-nav-pastilla]');
+    const progreso = header?.querySelector<HTMLElement>('[data-progreso-lectura]');
+    if (!header || !nav || !pastilla) return;
+
+    let pendiente = false;
+    const ajustar = () => {
+      pendiente = false;
+      const y = window.scrollY;
+      header.classList.toggle('compacta', y > 100);
+      const alto = document.documentElement.scrollHeight - window.innerHeight;
+      if (progreso) progreso.style.transform = `scaleX(${alto > 0 ? Math.min(1, y / alto) : 0})`;
+    };
+    const alDesplazar = () => {
+      if (!pendiente) { pendiente = true; requestAnimationFrame(ajustar); }
+    };
+    ajustar();
+    window.addEventListener('scroll', alDesplazar, { passive: true });
+
+    const ponerPastilla = (a: HTMLElement | null) => {
+      if (!a) { pastilla.style.opacity = '0'; return; }
+      const caja = a.getBoundingClientRect();
+      const base = nav.getBoundingClientRect();
+      pastilla.style.opacity = '1';
+      pastilla.style.width = `${caja.width}px`;
+      pastilla.style.height = `${caja.height}px`;
+      pastilla.style.transform = `translate(${caja.left - base.left}px, ${caja.top - base.top}px)`;
+    };
+    const activo = () => nav.querySelector<HTMLElement>('.nav-link.is-active');
+    const sobre = (e: Event) => {
+      const a = (e.target as HTMLElement).closest<HTMLElement>('.nav-link');
+      if (a && nav.contains(a)) ponerPastilla(a);
+    };
+    const volver = () => ponerPastilla(activo());
+    nav.addEventListener('pointerover', sobre);
+    nav.addEventListener('focusin', sobre);
+    nav.addEventListener('pointerleave', volver);
+    // Espera a que cargue la fuente para medir bien
+    document.fonts?.ready.then(volver);
+    window.addEventListener('resize', volver);
+    volver();
+
+    quitarCabecera = () => {
+      window.removeEventListener('scroll', alDesplazar);
+      window.removeEventListener('resize', volver);
+    };
+  }
+
+  document.addEventListener('astro:page-load', initCabecera);
 </script>
 
 <style>

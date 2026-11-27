@@ -66,7 +66,7 @@
 
   --border-color: var(--ix-linea);
   --border-strong: rgba(60, 35, 95, 0.22);
-  --grid-color: rgba(60, 35, 95, 0.05);
+  --grid-color: transparent;
 
   --accent: var(--ix-naranja-fuerte);
   --accent-soft: rgba(246, 141, 82, 0.16);
@@ -115,8 +115,8 @@ html[data-theme='light'] body {
     var(--ix-lavanda);
   background-attachment: fixed;
 }
-/* La rejilla técnica y la red animada del hero se conservan, más suaves sobre claro */
-html[data-theme='light'] .hero__canvas { opacity: 0.3; }
+html[data-theme] .blueprint-grid,
+html[data-theme] .hero__canvas { display: none; }
 
 /* ---------- Tipografía ---------- */
 html[data-theme] h1,
@@ -209,40 +209,164 @@ html[data-theme='light'] .badge { border-radius: 99px; }
 html[data-theme='light'] .badge-orange { background: var(--ix-durazno); color: var(--ix-naranja-fuerte); }
 html[data-theme='light'] .badge-purple { background: var(--ix-lavanda-2); color: var(--ix-morado); }
 
-/* ---------- Cabecera ---------- */
-/* Barra institucional: se conserva, en el tono de INGENIAX */
-html[data-theme='light'] .utility-bar {
-  background: linear-gradient(90deg, rgba(255, 230, 214, 0.7), rgba(239, 227, 251, 0.7));
-  border-bottom: 1px solid var(--ix-linea);
+/* ---------- Cabecera: el menú «redimensionable» de INGENIAX ----------
+   Arriba ocupa todo el ancho y es transparente; pasados 100 px se encoge a una
+   cápsula blanca centrada que baja 16 px (clase .compacta, la pone Header.astro).
+   La pastilla durazno se desliza bajo el enlace señalado. */
+html[data-theme] .utility-bar { display: none; }
+html[data-theme] .header { --header-h: 5rem; }
+html[data-theme] .header,
+html[data-theme] .header.is-scrolled {
+  background: transparent;
+  border-bottom-color: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
-html[data-theme] .utility-tag { font-weight: 600; letter-spacing: 0.12em; color: var(--text-secondary); }
-html[data-theme] .logo-uti { height: 34px; width: auto; }
+/* INGENIAX no la esconde al bajar: se queda como cápsula */
+html[data-theme] .header.is-hidden { transform: none; }
+html[data-theme] .main-nav { padding: 0; }
+html[data-theme] .header .nav-container {
+  position: relative;
+  max-width: 1360px;
+  padding: 16px clamp(1rem, 2.6vw, 2.5rem);
+  border-radius: 999px;
+  border: 1px solid transparent;
+  transition:
+    max-width 650ms cubic-bezier(.22, 1, .36, 1),
+    transform 650ms cubic-bezier(.22, 1, .36, 1),
+    padding 650ms cubic-bezier(.22, 1, .36, 1),
+    background-color 400ms ease, border-color 400ms ease, box-shadow 400ms ease;
+}
+html[data-theme] .header.compacta .nav-container {
+  max-width: clamp(880px, 70vw, 1080px);
+  transform: translateY(16px);
+  padding: 8px 8px 8px 22px;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  border-color: rgba(60, 35, 95, 0.1);
+  box-shadow: 0 12px 36px -14px rgba(60, 35, 95, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+html[data-theme='dark'] .header.compacta .nav-container {
+  background: rgba(24, 14, 43, 0.78);
+  border-color: rgba(179, 161, 211, 0.18);
+  box-shadow: 0 16px 48px -12px rgba(10, 4, 20, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+@media (prefers-reduced-transparency: reduce) {
+  html[data-theme] .header.compacta .nav-container { background: var(--bg-primary); backdrop-filter: none; }
+}
+
+/* Marca: logo UTI + «Facultad de Ingenierías» separado por una línea, como «INGENIAX 2026» */
+html[data-theme] .logo { gap: 18px; }
+html[data-theme] .logo-uti { height: 32px; width: auto; }
 html[data-theme='dark'] .logo-uti--color,
 html[data-theme='light'] .logo-uti--claro { display: none; }
-html[data-theme] .logo-sep {
-  width: 1px; height: 30px; background: var(--border-strong); flex-shrink: 0;
+html[data-theme] .logo-sep { width: 1px; height: 28px; background: rgba(60, 35, 95, 0.18); flex-shrink: 0; }
+html[data-theme='dark'] .logo-sep { background: rgba(179, 161, 211, 0.25); }
+html[data-theme] .logo-mark { display: none; }
+html[data-theme] .logo-kicker { font-weight: 500; letter-spacing: 0.02em; text-transform: none; font-size: 11px; }
+html[data-theme] .logo-text strong { font-family: var(--font-display); font-weight: 800; font-size: 15px; letter-spacing: 0.01em; }
+html[data-theme] .header.compacta .logo-sep,
+html[data-theme] .header.compacta .logo-text { display: none; }
+@media (max-width: 1180px) {
+  html[data-theme] .logo-sep, html[data-theme] .logo-text { display: none; }
 }
-html[data-theme] .logo-mark {
-  background: linear-gradient(135deg, #f68d52, #d9590c);
-  color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 10px 22px -12px rgba(217, 89, 12, 0.7);
+
+/* Enlaces sueltos y pastilla */
+html[data-theme] .desktop-nav { position: relative; margin-left: auto; }
+html[data-theme] .desktop-nav > ul { gap: 2px; background: none; border: 0; padding: 0; }
+html[data-theme] .nav-pastilla {
+  position: absolute; left: 0; top: 0; width: 0; height: 0;
+  border-radius: 999px;
+  background: rgba(243, 109, 27, 0.16);
+  opacity: 0; pointer-events: none;
+  transition: transform 420ms cubic-bezier(.22, 1, .36, 1), width 420ms cubic-bezier(.22, 1, .36, 1), opacity 250ms ease;
 }
-html[data-theme] .logo-kicker { font-weight: 500; letter-spacing: 0.04em; text-transform: none; }
-html[data-theme] .logo-text strong { font-family: var(--font-display); font-weight: 800; letter-spacing: -0.01em; }
-html[data-theme] .desktop-nav > ul {
-  background: rgba(255, 255, 255, 0.55);
-  border: 1px solid var(--ix-linea);
-  border-radius: 99px;
-  padding: 4px;
-  backdrop-filter: blur(10px);
+html[data-theme] .nav-link {
+  position: relative; z-index: 1;
+  padding: 8px 16px;
+  font-family: var(--font-body);
+  font-size: 15px; font-weight: 500;
+  color: var(--text-secondary);
+  background: none;
+  border-radius: 999px;
 }
-html[data-theme='dark'] .desktop-nav > ul { background: rgba(36, 22, 63, 0.6); }
-html[data-theme] .nav-link { font-weight: 500; font-size: 15px; border-radius: 99px; color: var(--text-secondary); }
-html[data-theme] .nav-link.is-active { background: var(--ix-durazno); color: var(--ix-ink); }
+html[data-theme] .nav-link:hover { background: none; color: var(--text-primary); }
+html[data-theme] .nav-link.is-active { background: none; color: var(--text-primary); }
 html[data-theme] .nav-link.is-active::before { display: none; }
-html[data-theme='dark'] .nav-link.is-active { background: rgba(246, 141, 82, 0.18); color: #fff; }
-html[data-theme] .nav-actions .theme-toggle { margin-right: 6px; }
+html[data-theme] .nav-caret { opacity: 0.8; }
+
+/* Paneles desplegables: tarjeta blanca de INGENIAX */
+html[data-theme] .mega { top: calc(100% + 14px); }
+html[data-theme] .mega__inner {
+  background: #fff;
+  border: 1px solid var(--ix-linea);
+  border-radius: 18px;
+  padding: 8px;
+  box-shadow: 0 24px 60px -24px rgba(60, 35, 95, 0.35);
+}
+html[data-theme='dark'] .mega__inner { background: #24163f; border-color: rgba(179, 161, 211, 0.18); box-shadow: 0 24px 60px -18px rgba(10, 4, 20, 0.7); }
+html[data-theme] .mega__item { border-radius: 12px; padding: 10px 14px; }
+html[data-theme='light'] .mega__item:hover { background: var(--ix-durazno); }
+html[data-theme='dark'] .mega__item:hover { background: rgba(243, 109, 27, 0.14); }
+html[data-theme] .mega__body strong { font-size: 15px; font-weight: 600; }
+html[data-theme] .mega__meta { font-size: 12.5px; text-transform: none; letter-spacing: 0; }
+html[data-theme] .mega__footer { border-radius: 12px; }
+
+/* Acciones: interruptor, botón naranja y menú del teléfono */
+html[data-theme] .nav-actions { display: flex; align-items: center; gap: 12px; margin-left: 18px; }
+html[data-theme] .cta-barra { padding: 10px 18px; }
+html[data-theme] .header.compacta .cta-barra { padding: 10px 18px; }
+@media (max-width: 1023px) {
+  html[data-theme] .cta-barra { display: none; }
+  html[data-theme] .nav-actions { margin-left: auto; }
+}
+html[data-theme] .mobile-menu-btn {
+  width: 44px; height: 44px; border-radius: 50%;
+  border: 1px solid var(--ix-linea);
+  background: rgba(255, 255, 255, 0.7);
+}
+html[data-theme='dark'] .mobile-menu-btn { background: #2f1b4c; }
+
+/* Línea de lectura bajo el menú (degradado morado→naranja de INGENIAX) */
+html[data-theme] .scroll-progress { display: none; }
+html[data-theme] .progreso-lectura {
+  position: absolute; left: 50%; bottom: 0; height: 2px;
+  width: 100%; transform: translateX(-50%);
+  transition: width 650ms cubic-bezier(.22, 1, .36, 1), bottom 650ms;
+  pointer-events: none;
+}
+html[data-theme] .progreso-lectura i {
+  display: block; height: 100%;
+  background: linear-gradient(90deg, #3c235f, #8e74bb 45%, #f68d52);
+  transform: scaleX(0); transform-origin: left;
+}
+html[data-theme] .header.compacta .progreso-lectura {
+  width: clamp(820px, 66vw, 1020px); bottom: -14px; border-radius: 2px; overflow: hidden;
+}
+@media (max-width: 1100px) {
+  html[data-theme] .header.compacta .nav-container { max-width: calc(100vw - 32px); }
+  html[data-theme] .header.compacta .progreso-lectura { width: calc(100vw - 72px); }
+}
+
+/* Menú del teléfono: pantalla completa con enlaces grandes, como INGENIAX */
+html[data-theme] .drawer__backdrop { background: rgba(43, 26, 71, 0.18); }
+html[data-theme] .drawer__panel {
+  width: 100%; max-width: none;
+  background:
+    radial-gradient(60vw 50vw at 100% 0%, rgba(255, 214, 190, 0.6), transparent 60%),
+    var(--bg-primary);
+  border-left: 0;
+}
+html[data-theme] .drawer__list a {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2rem, 9vw, 2.5rem);
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+html[data-theme] .drawer__close { border-radius: 50%; }
 
 /* ---------- Portada ---------- */
 html[data-theme] .hero__foto {
@@ -379,7 +503,125 @@ html[data-theme] .tramite-content h2::after {
 @media (max-width: 520px) {
   html[data-theme] .logo { gap: 8px; }
   html[data-theme] .logo-uti { height: 28px; }
-  html[data-theme] .logo-kicker,
-  html[data-theme] .logo-mark { display: none; }
+  html[data-theme] .logo-kicker { display: none; }
   html[data-theme] .logo-text strong { font-size: 1rem; }
+}
+
+/* ---------- Interruptor de tema: cielo de día / de noche ---------- */
+.tema-switch {
+  position: relative;
+  flex-shrink: 0;
+  width: 62px;
+  height: 32px;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid rgba(60, 35, 95, 0.14);
+  overflow: hidden;
+  cursor: pointer;
+  background: linear-gradient(135deg, #ffe6d6, #ffd2b3 55%, #f9c2d8);
+  box-shadow: inset 0 1px 2px rgba(60, 35, 95, 0.12), 0 6px 16px -10px rgba(217, 89, 12, 0.6);
+  transition: background 600ms ease, border-color 400ms ease, box-shadow 400ms ease, transform 160ms cubic-bezier(.23, 1, .32, 1);
+}
+.tema-switch:active { transform: scale(0.95); }
+.tema-switch:focus-visible { outline: 2px solid var(--ix-naranja-fuerte); outline-offset: 3px; }
+.tema-switch[data-tema='dark'] {
+  background: linear-gradient(135deg, #1b1033, #3c235f 60%, #5a3a8c);
+  border-color: rgba(201, 178, 238, 0.28);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4), 0 6px 18px -10px rgba(138, 79, 184, 0.8);
+}
+.tema-switch__cielo { position: absolute; inset: 0; pointer-events: none; }
+/* Nube de día: se va hacia la derecha cuando cae la noche */
+.tema-switch__nube {
+  position: absolute; right: 7px; bottom: 7px;
+  width: 16px; height: 6px; border-radius: 6px; background: #fff; opacity: 0.95;
+  transition: transform 600ms cubic-bezier(.22, 1, .36, 1), opacity 400ms ease;
+}
+.tema-switch__nube::before {
+  content: ''; position: absolute; left: 3px; bottom: 3px; width: 8px; height: 8px; border-radius: 50%; background: #fff;
+}
+.tema-switch[data-tema='dark'] .tema-switch__nube { transform: translateX(20px); opacity: 0; }
+/* Estrellas de noche */
+.tema-switch__estrella {
+  position: absolute; width: 3px; height: 3px; border-radius: 50%; background: #fff;
+  opacity: 0; transform: scale(0);
+  transition: opacity 400ms ease, transform 500ms cubic-bezier(.34, 1.56, .64, 1);
+}
+.tema-switch[data-tema='dark'] .tema-switch__estrella {
+  opacity: 1; transform: scale(1);
+  animation: tema-titilar 2.4s ease-in-out infinite;
+}
+@keyframes tema-titilar { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+
+/* El astro: se desliza de izquierda (sol) a derecha (luna) */
+.tema-switch__astro {
+  position: absolute; top: 2px; left: 2px;
+  width: 26px; height: 26px;
+  display: grid; place-items: center;
+  transition: transform 620ms cubic-bezier(.34, 1.3, .5, 1);
+}
+.tema-switch[data-tema='dark'] .tema-switch__astro { transform: translateX(30px); }
+.tema-switch[data-mounted='false'] .tema-switch__astro,
+.tema-switch[data-mounted='false'] * { transition: none !important; }
+.tema-switch__astro svg { width: 26px; height: 26px; overflow: visible; }
+.tema-switch__disco {
+  fill: #f68d52;
+  transform-box: fill-box; transform-origin: center;
+  transition: transform 620ms cubic-bezier(.22, 1, .36, 1), fill 500ms ease;
+}
+.tema-switch__astro svg { filter: drop-shadow(0 0 3px rgba(246, 141, 82, 0.85)); transition: filter 500ms ease; }
+.tema-switch[data-tema='dark'] .tema-switch__astro svg { filter: drop-shadow(0 0 4px rgba(233, 226, 251, 0.75)); }
+.tema-switch[data-tema='dark'] .tema-switch__disco { fill: #f4eefe; transform: scale(1.5); }
+.tema-switch__sombra {
+  transform: translate(12px, -12px);
+  transition: transform 620ms cubic-bezier(.22, 1, .36, 1);
+}
+.tema-switch[data-tema='dark'] .tema-switch__sombra { transform: none; }
+.tema-switch__crater { fill: #c9b2ee; opacity: 0; transition: opacity 400ms ease 200ms; }
+.tema-switch[data-tema='dark'] .tema-switch__crater { opacity: 0.8; }
+.tema-switch__rayos {
+  stroke: #f36d1b; stroke-width: 1.8; stroke-linecap: round;
+  transform-origin: 12px 12px;
+  transition: transform 620ms cubic-bezier(.22, 1, .36, 1), opacity 300ms ease;
+  animation: tema-girar 14s linear infinite;
+}
+.tema-switch:hover .tema-switch__rayos { animation-duration: 4s; }
+.tema-switch[data-tema='dark'] .tema-switch__rayos { opacity: 0; transform: scale(0.3) rotate(90deg); animation: none; }
+@keyframes tema-girar { to { transform: rotate(360deg); } }
+
+/* ---------- Cambio de tema: sol o luna que cruza al centro y revela el modo nuevo ---------- */
+.cambio-tema {
+  position: fixed; inset: 0; z-index: 10000;
+  display: grid; place-items: center;
+  pointer-events: none;
+}
+.cambio__astro { width: min(46vmin, 260px); aspect-ratio: 1; will-change: transform, opacity; }
+.cambio__astro svg { width: 100%; height: 100%; overflow: visible; }
+.cambio-tema--sol .cambio__astro { filter: drop-shadow(0 0 40px rgba(255, 180, 90, 0.85)); }
+.cambio-tema--luna .cambio__astro { filter: drop-shadow(0 0 36px rgba(201, 178, 238, 0.9)); }
+.cambio__rayos { transform-origin: 100px 100px; animation: tema-girar 6s linear infinite; }
+.cambio__halo {
+  position: absolute; width: min(110vmin, 760px); aspect-ratio: 1; border-radius: 50%;
+  opacity: 0;
+}
+.cambio-tema--sol .cambio__halo { background: radial-gradient(circle, rgba(255, 214, 160, 0.75), rgba(255, 230, 214, 0.25) 45%, transparent 70%); }
+.cambio-tema--luna .cambio__halo { background: radial-gradient(circle, rgba(138, 79, 184, 0.55), rgba(60, 35, 95, 0.25) 45%, transparent 70%); }
+.cambio__estrella {
+  position: absolute; width: 5px; height: 5px; border-radius: 50%;
+  background: #fff; box-shadow: 0 0 8px 2px rgba(233, 226, 251, 0.9);
+  transform: translate(var(--x), var(--y)) scale(0); opacity: 0;
+  animation: cambio-estrella 1300ms cubic-bezier(.22, 1, .36, 1) var(--d) forwards;
+}
+@keyframes cambio-estrella {
+  30% { opacity: 1; transform: translate(var(--x), var(--y)) scale(1.2); }
+  60% { opacity: 0.4; transform: translate(var(--x), var(--y)) scale(0.8); }
+  80% { opacity: 1; transform: translate(var(--x), var(--y)) scale(1); }
+  100% { opacity: 0; transform: translate(var(--x), var(--y)) scale(0.4); }
+}
+/* La página nueva se revela en círculo; la capa del astro sigue viva encima */
+html.tema-cambiando::view-transition-old(root),
+html.tema-cambiando::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+html.tema-cambiando::view-transition-old(root) { z-index: 1; }
+html.tema-cambiando::view-transition-new(root) { z-index: 2; }
+@media (prefers-reduced-motion: reduce) {
+  .tema-switch__rayos, .tema-switch__estrella { animation: none !important; }
 }

@@ -17,7 +17,9 @@ const isActive = (href: string) =>
         Universidad Tecnológica Indoamérica
       </p>
       {/* Aula Virtual, SGA y Correo quedan fuera del alcance de esta fase */}
-      <div class="utility-links"></div>
+      <div class="utility-links">
+        <ThemeToggle client:load />
+      </div>
     </div>
   </div>
 
@@ -102,7 +104,6 @@ const isActive = (href: string) =>
       </nav>
 
       <div class="nav-actions">
-        <ThemeToggle client:load />
         <button
           class="mobile-menu-btn"
           aria-label="Abrir menú"

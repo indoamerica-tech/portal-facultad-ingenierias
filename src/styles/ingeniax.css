@@ -66,7 +66,7 @@
 
   --border-color: var(--ix-linea);
   --border-strong: rgba(60, 35, 95, 0.22);
-  --grid-color: transparent;
+  --grid-color: rgba(60, 35, 95, 0.05);
 
   --accent: var(--ix-naranja-fuerte);
   --accent-soft: rgba(246, 141, 82, 0.16);
@@ -115,8 +115,8 @@ html[data-theme='light'] body {
     var(--ix-lavanda);
   background-attachment: fixed;
 }
-html[data-theme] .blueprint-grid,
-html[data-theme] .hero__canvas { display: none; }
+/* La rejilla técnica y la red animada del hero se conservan, más suaves sobre claro */
+html[data-theme='light'] .hero__canvas { opacity: 0.3; }
 
 /* ---------- Tipografía ---------- */
 html[data-theme] h1,
@@ -210,15 +210,24 @@ html[data-theme='light'] .badge-orange { background: var(--ix-durazno); color: v
 html[data-theme='light'] .badge-purple { background: var(--ix-lavanda-2); color: var(--ix-morado); }
 
 /* ---------- Cabecera ---------- */
-html[data-theme] .utility-bar { display: none; }
-html[data-theme] .header { --header-h: 4.6rem; }
+/* Barra institucional: se conserva, en el tono de INGENIAX */
+html[data-theme='light'] .utility-bar {
+  background: linear-gradient(90deg, rgba(255, 230, 214, 0.7), rgba(239, 227, 251, 0.7));
+  border-bottom: 1px solid var(--ix-linea);
+}
+html[data-theme] .utility-tag { font-weight: 600; letter-spacing: 0.12em; color: var(--text-secondary); }
 html[data-theme] .logo-uti { height: 34px; width: auto; }
 html[data-theme='dark'] .logo-uti--color,
 html[data-theme='light'] .logo-uti--claro { display: none; }
 html[data-theme] .logo-sep {
   width: 1px; height: 30px; background: var(--border-strong); flex-shrink: 0;
 }
-html[data-theme] .logo-mark { display: none; }
+html[data-theme] .logo-mark {
+  background: linear-gradient(135deg, #f68d52, #d9590c);
+  color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 10px 22px -12px rgba(217, 89, 12, 0.7);
+}
 html[data-theme] .logo-kicker { font-weight: 500; letter-spacing: 0.04em; text-transform: none; }
 html[data-theme] .logo-text strong { font-family: var(--font-display); font-weight: 800; letter-spacing: -0.01em; }
 html[data-theme] .desktop-nav > ul {
@@ -370,6 +379,7 @@ html[data-theme] .tramite-content h2::after {
 @media (max-width: 520px) {
   html[data-theme] .logo { gap: 8px; }
   html[data-theme] .logo-uti { height: 28px; }
-  html[data-theme] .logo-kicker { display: none; }
+  html[data-theme] .logo-kicker,
+  html[data-theme] .logo-mark { display: none; }
   html[data-theme] .logo-text strong { font-size: 1rem; }
 }

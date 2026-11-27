@@ -4,10 +4,12 @@ import Icon from '../../components/ui/Icon.astro';
 import Button from '../../components/ui/Button.astro';
 import Card from '../../components/ui/Card.astro';
 import CareerNews from '../../components/sections/CareerNews.astro';
+import CareerFigure from '../../components/interactive/CareerFigure.astro';
 ---
 <PageLayout title="Ingeniería Industrial" description="Carrera de Ingeniería Industrial en el campus Quito">
   <div class="career-hero">
-    <div class="container hero-content">
+    <div class="container career-hero__grid">
+    <div class="hero-content">
       <span class="badge badge-orange">Presencial / Semipresencial</span>
       <h1 class="career-title">Ingeniería <span class="text-orange">Industrial</span></h1>
       <p class="career-desc">Optimiza procesos, gestiona recursos y lidera la transformación productiva y de servicios con un enfoque integral y sostenible.</p>
@@ -19,6 +21,8 @@ import CareerNews from '../../components/sections/CareerNews.astro';
         <Button href="/tramites" variant="primary">Ver trámites</Button>
         <Button href="#novedades" variant="outline">Eventos y noticias</Button>
       </div>
+    </div>
+    <CareerFigure slug="ingenieria-industrial" label="Figura animada: brazo robótico que mueve cajas por una banda y engranajes" />
     </div>
   </div>
 

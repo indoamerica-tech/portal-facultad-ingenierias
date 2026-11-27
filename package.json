@@ -20,7 +20,8 @@
     "lucide-react": "^1.23.0",
     "motion": "^12.42.2",
     "react": "^19.2.7",
-    "react-dom": "^19.2.7"
+    "react-dom": "^19.2.7",
+    "three": "^0.186.1"
   },
   "packageManager": "npm@11.19.1"
 }

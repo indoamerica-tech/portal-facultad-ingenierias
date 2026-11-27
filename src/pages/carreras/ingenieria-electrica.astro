@@ -4,10 +4,12 @@ import Icon from '../../components/ui/Icon.astro';
 import Button from '../../components/ui/Button.astro';
 import Card from '../../components/ui/Card.astro';
 import CareerNews from '../../components/sections/CareerNews.astro';
+import CareerFigure from '../../components/interactive/CareerFigure.astro';
 ---
 <PageLayout title="Ingeniería Eléctrica" description="Carrera de Ingeniería Eléctrica en el campus Quito">
   <div class="career-hero">
-    <div class="container hero-content">
+    <div class="container career-hero__grid">
+    <div class="hero-content">
       <span class="badge badge-orange">Presencial</span>
       <h1 class="career-title">Ingeniería <span class="text-orange">Eléctrica</span></h1>
       <p class="career-desc">Diseña, implementa y gestiona sistemas de generación, transmisión y distribución de energía eléctrica con estándares de calidad y eficiencia.</p>
@@ -19,6 +21,8 @@ import CareerNews from '../../components/sections/CareerNews.astro';
         <Button href="/tramites" variant="primary">Ver trámites</Button>
         <Button href="#novedades" variant="outline">Eventos y noticias</Button>
       </div>
+    </div>
+    <CareerFigure slug="ingenieria-electrica" label="Figura animada: torre de alta tensión con energía en las líneas, aerogenerador y panel solar" />
     </div>
   </div>
 

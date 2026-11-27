@@ -239,7 +239,7 @@ html[data-theme] .header .nav-container {
     background-color 400ms ease, border-color 400ms ease, box-shadow 400ms ease;
 }
 html[data-theme] .header.compacta .nav-container {
-  max-width: clamp(880px, 70vw, 1080px);
+  max-width: clamp(880px, 66vw, 1040px);
   transform: translateY(16px);
   padding: 8px 8px 8px 22px;
   background: rgba(255, 255, 255, 0.82);
@@ -267,6 +267,7 @@ html[data-theme='dark'] .logo-sep { background: rgba(179, 161, 211, 0.25); }
 html[data-theme] .logo-mark { display: none; }
 html[data-theme] .logo-kicker { font-weight: 500; letter-spacing: 0.02em; text-transform: none; font-size: 11px; }
 html[data-theme] .logo-text strong { font-family: var(--font-display); font-weight: 800; font-size: 15px; letter-spacing: 0.01em; }
+html[data-theme] .header.compacta .logo-uti { height: 28px; }
 html[data-theme] .header.compacta .logo-sep,
 html[data-theme] .header.compacta .logo-text { display: none; }
 @media (max-width: 1180px) {
@@ -588,35 +589,22 @@ html[data-theme] .tramite-content h2::after {
 .tema-switch[data-tema='dark'] .tema-switch__rayos { opacity: 0; transform: scale(0.3) rotate(90deg); animation: none; }
 @keyframes tema-girar { to { transform: rotate(360deg); } }
 
-/* ---------- Cambio de tema: sol o luna que cruza al centro y revela el modo nuevo ---------- */
+/* ---------- Cambio de tema: sol o luna de línea fina que cruza al centro ---------- */
 .cambio-tema {
   position: fixed; inset: 0; z-index: 10000;
   display: grid; place-items: center;
   pointer-events: none;
 }
-.cambio__astro { width: min(46vmin, 260px); aspect-ratio: 1; will-change: transform, opacity; }
+.cambio__astro { width: 88px; aspect-ratio: 1; will-change: transform, opacity; }
 .cambio__astro svg { width: 100%; height: 100%; overflow: visible; }
-.cambio-tema--sol .cambio__astro { filter: drop-shadow(0 0 40px rgba(255, 180, 90, 0.85)); }
-.cambio-tema--luna .cambio__astro { filter: drop-shadow(0 0 36px rgba(201, 178, 238, 0.9)); }
-.cambio__rayos { transform-origin: 100px 100px; animation: tema-girar 6s linear infinite; }
-.cambio__halo {
-  position: absolute; width: min(110vmin, 760px); aspect-ratio: 1; border-radius: 50%;
-  opacity: 0;
-}
-.cambio-tema--sol .cambio__halo { background: radial-gradient(circle, rgba(255, 214, 160, 0.75), rgba(255, 230, 214, 0.25) 45%, transparent 70%); }
-.cambio-tema--luna .cambio__halo { background: radial-gradient(circle, rgba(138, 79, 184, 0.55), rgba(60, 35, 95, 0.25) 45%, transparent 70%); }
-.cambio__estrella {
-  position: absolute; width: 5px; height: 5px; border-radius: 50%;
-  background: #fff; box-shadow: 0 0 8px 2px rgba(233, 226, 251, 0.9);
-  transform: translate(var(--x), var(--y)) scale(0); opacity: 0;
-  animation: cambio-estrella 1300ms cubic-bezier(.22, 1, .36, 1) var(--d) forwards;
-}
-@keyframes cambio-estrella {
-  30% { opacity: 1; transform: translate(var(--x), var(--y)) scale(1.2); }
-  60% { opacity: 0.4; transform: translate(var(--x), var(--y)) scale(0.8); }
-  80% { opacity: 1; transform: translate(var(--x), var(--y)) scale(1); }
-  100% { opacity: 0; transform: translate(var(--x), var(--y)) scale(0.4); }
-}
+.cambio-tema--sol .cambio__astro { filter: drop-shadow(0 6px 18px rgba(217, 89, 12, 0.35)); }
+.cambio-tema--luna .cambio__astro { filter: drop-shadow(0 6px 18px rgba(60, 35, 95, 0.45)); }
+.cambio__rayos { transform-origin: 24px 24px; animation: tema-girar 5s linear infinite; }
+/* El interruptor sí sigue animando (el astro se desliza); el resto cambia de golpe bajo el círculo */
+html.tema-cambiando,
+html.tema-cambiando :not(.tema-switch, .tema-switch *),
+html.tema-cambiando :not(.tema-switch, .tema-switch *)::before,
+html.tema-cambiando :not(.tema-switch, .tema-switch *)::after { transition: none !important; }
 /* La página nueva se revela en círculo; la capa del astro sigue viva encima */
 html.tema-cambiando::view-transition-old(root),
 html.tema-cambiando::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
@@ -624,4 +612,79 @@ html.tema-cambiando::view-transition-old(root) { z-index: 1; }
 html.tema-cambiando::view-transition-new(root) { z-index: 2; }
 @media (prefers-reduced-motion: reduce) {
   .tema-switch__rayos, .tema-switch__estrella { animation: none !important; }
+}
+
+/* ---------- «INGENIERÍAS» en ASCII bajo el texto de la portada ---------- */
+html[data-theme] .hero { flex-direction: column; align-items: stretch; justify-content: center; }
+html[data-theme] .hero__marca { margin-top: clamp(1.5rem, 4vh, 3rem); }
+html[data-theme] .marca-ascii { width: 100%; }
+html[data-theme] .hero__scroll { display: none; }
+html[data-theme] .marca-ascii canvas { display: block; width: 100%; }
+
+/* ---------- Ilustración de cada carrera en su tarjeta ---------- */
+html[data-theme] .career__visual {
+  display: block;
+  margin: calc(var(--space-6) * -1) calc(var(--space-6) * -1) 0;
+  aspect-ratio: 7 / 4;
+  overflow: hidden;
+  border-bottom: 1px solid var(--ix-linea);
+  background: linear-gradient(135deg, var(--ix-durazno), var(--ix-lavanda-2));
+}
+html[data-theme] .career__visual img {
+  width: 100%; height: 100%; object-fit: cover;
+  transform: scale(1.04);
+  transition: transform 900ms cubic-bezier(.22, 1, .36, 1);
+}
+html[data-theme] .career:hover .career__visual img { transform: scale(1.1) translateY(-2%); }
+/* La ficha y el número quedan sobre la imagen, como las etiquetas de INGENIAX */
+html[data-theme] .career__index {
+  position: absolute; top: 14px; right: 14px; z-index: 2;
+  padding: 3px 10px; border-radius: 99px;
+  background: rgba(255, 255, 255, 0.85); color: var(--ix-ink); font-weight: 700;
+}
+html[data-theme] .career__icon { margin-top: -38px; position: relative; z-index: 2; box-shadow: var(--ix-sombra); background: #fff; }
+html[data-theme='dark'] .career__icon { background: #2f1b4c; }
+html[data-theme='dark'] .career__visual img { filter: brightness(0.88) saturate(1.05); }
+@media (prefers-reduced-motion: reduce) { html[data-theme] .career__visual img { transition: none; } }
+
+/* ---------- Página de cada carrera: franja pastel con su figura 3D ---------- */
+html[data-theme] .career-hero {
+  background:
+    radial-gradient(55% 120% at 100% 0%, rgba(255, 214, 190, 0.65), transparent 60%),
+    linear-gradient(135deg, var(--ix-lavanda-2), var(--ix-lavanda));
+  border-bottom: 1px solid var(--ix-linea);
+  padding-block: clamp(3rem, 6vw, 5rem);
+}
+html[data-theme='dark'] .career-hero { background: linear-gradient(135deg, #2f1b4c, #180e2b); }
+html[data-theme] .career-hero__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  align-items: center;
+  gap: clamp(1.5rem, 4vw, 3rem);
+}
+html[data-theme] .career-hero .text-orange {
+  font-weight: 800;
+  background: var(--ix-degradado-texto); background-size: 260% 100%;
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+  animation: ix-degradado 9s ease-in-out infinite alternate;
+}
+.career-figure {
+  position: relative;
+  margin: 0;
+  width: 100%;
+  max-width: 440px;
+  justify-self: center;
+  aspect-ratio: 1 / 0.85;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 50% 58%, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0) 62%);
+  cursor: grab;
+}
+html[data-theme='dark'] .career-figure { background: radial-gradient(circle at 50% 58%, rgba(138, 79, 184, 0.28), transparent 62%); }
+.career-figure canvas { display: block; width: 100% !important; height: 100% !important; opacity: 0; transition: opacity 700ms ease; }
+.career-figure.is-lista canvas { opacity: 1; }
+@media (max-width: 860px) {
+  html[data-theme] .career-hero__grid { grid-template-columns: 1fr; }
+  .career-figure { max-width: 320px; }
 }

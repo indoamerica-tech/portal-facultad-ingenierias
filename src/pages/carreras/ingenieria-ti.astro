@@ -4,10 +4,12 @@ import Icon from '../../components/ui/Icon.astro';
 import Button from '../../components/ui/Button.astro';
 import Card from '../../components/ui/Card.astro';
 import CareerNews from '../../components/sections/CareerNews.astro';
+import CareerFigure from '../../components/interactive/CareerFigure.astro';
 ---
 <PageLayout title="Tecnologías de la Información" description="Carrera de Tecnologías de la Información en el campus Quito">
   <div class="career-hero">
-    <div class="container hero-content">
+    <div class="container career-hero__grid">
+    <div class="hero-content">
       <span class="badge badge-orange">Presencial</span>
       <h1 class="career-title">Tecnologías de la <span class="text-orange">Información</span></h1>
       <p class="career-desc">Lidera la transformación digital administrando bases de datos, redes de telecomunicación y garantizando la ciberseguridad empresarial.</p>
@@ -19,6 +21,8 @@ import CareerNews from '../../components/sections/CareerNews.astro';
         <Button href="/tramites" variant="primary">Ver trámites</Button>
         <Button href="#novedades" variant="outline">Eventos y noticias</Button>
       </div>
+    </div>
+    <CareerFigure slug="ingenieria-ti" label="Figura animada: rack de servidores, red de nodos con datos viajando y escudo de ciberseguridad" />
     </div>
   </div>
 

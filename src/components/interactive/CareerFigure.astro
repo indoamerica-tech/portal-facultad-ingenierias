@@ -1,0 +1,35 @@
+---
+/**
+ * Figura 3D animada de una carrera (src/scripts/figuras3d.ts). three.js se descarga
+ * solo cuando la figura está por entrar en pantalla. Gira suavemente con el puntero.
+ */
+interface Props { slug: string; label: string }
+const { slug, label } = Astro.props;
+---
+
+<figure class="career-figure" data-career-figure={slug} role="img" aria-label={label}></figure>
+
+<script>
+  let desmontar: Array<() => void> = [];
+
+  function montarFiguras() {
+    desmontar.forEach((f) => f());
+    desmontar = [];
+    const quieto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.querySelectorAll<HTMLElement>('[data-career-figure]').forEach((el) => {
+      const io = new IntersectionObserver(([e]) => {
+        if (!e.isIntersecting) return;
+        io.disconnect();
+        import('../../scripts/figuras3d').then(({ figura }) => {
+          desmontar.push(figura(el, el.dataset.careerFigure!, { quieto }));
+          el.classList.add('is-lista');
+        });
+      }, { rootMargin: '200px' });
+      io.observe(el);
+      desmontar.push(() => io.disconnect());
+    });
+  }
+
+  document.addEventListener('astro:page-load', montarFiguras);
+  document.addEventListener('astro:before-swap', () => { desmontar.forEach((f) => f()); desmontar = []; });
+</script>

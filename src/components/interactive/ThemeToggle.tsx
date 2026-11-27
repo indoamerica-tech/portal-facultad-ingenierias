@@ -18,38 +18,18 @@ function aplicarTema(next: Theme) {
   localStorage.setItem('theme', next);
 }
 
+// Astros de línea fina: sobrios, del tamaño de un icono grande (no ilustraciones).
 const SOL = `
-  <svg viewBox="0 0 200 200" aria-hidden="true">
-    <defs>
-      <radialGradient id="cambio-sol" cx="40%" cy="38%" r="70%">
-        <stop offset="0" stop-color="#fff4c2"/><stop offset=".45" stop-color="#ffc56b"/><stop offset="1" stop-color="#f36d1b"/>
-      </radialGradient>
-    </defs>
-    <g class="cambio__rayos">
-      ${Array.from({ length: 12 }, (_, i) =>
-        `<rect x="96" y="6" width="8" height="${i % 2 ? 22 : 32}" rx="4" fill="#f9a774" transform="rotate(${i * 30} 100 100)"/>`
-      ).join('')}
+  <svg viewBox="0 0 48 48" aria-hidden="true" fill="none" stroke-linecap="round">
+    <circle cx="24" cy="24" r="8.5" fill="#f68d52" stroke="#d9590c" stroke-width="1.5"/>
+    <g class="cambio__rayos" stroke="#e2702a" stroke-width="2">
+      ${Array.from({ length: 8 }, (_, i) => `<line x1="24" y1="5" x2="24" y2="10" transform="rotate(${i * 45} 24 24)"/>`).join('')}
     </g>
-    <circle cx="100" cy="100" r="52" fill="url(#cambio-sol)"/>
   </svg>`;
 
 const LUNA = `
-  <svg viewBox="0 0 200 200" aria-hidden="true">
-    <defs>
-      <radialGradient id="cambio-luna" cx="35%" cy="35%" r="75%">
-        <stop offset="0" stop-color="#fffdf6"/><stop offset=".6" stop-color="#e9e2fb"/><stop offset="1" stop-color="#c9b2ee"/>
-      </radialGradient>
-      <mask id="cambio-luna-mascara">
-        <rect width="200" height="200" fill="#fff"/>
-        <circle cx="132" cy="74" r="56" fill="#000"/>
-      </mask>
-    </defs>
-    <g mask="url(#cambio-luna-mascara)">
-      <circle cx="100" cy="100" r="62" fill="url(#cambio-luna)"/>
-      <circle cx="74" cy="122" r="9" fill="#c9b2ee" opacity=".55"/>
-      <circle cx="58" cy="92" r="5" fill="#c9b2ee" opacity=".5"/>
-      <circle cx="92" cy="146" r="4" fill="#c9b2ee" opacity=".45"/>
-    </g>
+  <svg viewBox="0 0 48 48" aria-hidden="true" fill="none">
+    <path d="M30.5 9.5a15 15 0 1 0 8 21.6A12.5 12.5 0 0 1 30.5 9.5z" fill="#ece4fc" stroke="#c9b2ee" stroke-width="1.5" stroke-linejoin="round"/>
   </svg>`;
 
 function animarCambio(next: Theme, desde: DOMRect) {
@@ -58,65 +38,50 @@ function animarCambio(next: Theme, desde: DOMRect) {
   const ox = desde.left + desde.width / 2;
   const oy = desde.top + desde.height / 2;
 
-  // Capa del astro: va por encima de todo. Fuera del círculo se ve la captura vieja
-  // (con el astro quieto en el centro) y dentro, la página nueva con el astro vivo.
   const capa = document.createElement('div');
   capa.className = `cambio-tema cambio-tema--${next === 'light' ? 'sol' : 'luna'}`;
   capa.setAttribute('aria-hidden', 'true');
-  const estrellas = next === 'dark'
-    ? Array.from({ length: 14 }, (_, i) => {
-        const ang = (i / 14) * Math.PI * 2 + (i % 3) * 0.4;
-        const dist = 130 + ((i * 37) % 90);
-        return `<i class="cambio__estrella" style="--x:${Math.cos(ang) * dist}px;--y:${Math.sin(ang) * dist}px;--d:${(i % 5) * 90}ms"></i>`;
-      }).join('')
-    : '';
-  capa.innerHTML = `<div class="cambio__halo"></div><div class="cambio__astro">${next === 'light' ? SOL : LUNA}</div>${estrellas}`;
+  capa.innerHTML = `<div class="cambio__astro">${next === 'light' ? SOL : LUNA}</div>`;
   document.body.appendChild(capa);
 
+  // Un solo gesto: el astro sale del botón, llega al centro y se disuelve mientras
+  // el tema nuevo se abre desde ahí. Curvas por tramo para que no haya saltos.
   const astro = capa.querySelector<HTMLElement>('.cambio__astro')!;
-  // La curva va en cada tramo (no en las opciones): llega al centro hacia el 40 %,
-  // se queda mientras se revela el tema y al final se disuelve hacia arriba.
-  const ida = 'cubic-bezier(.22, 1, .36, 1)';
-  const giro = next === 'light' ? -90 : 40;
+  const giro = next === 'light' ? -60 : 25;
   const viaje = astro.animate(
     [
-      { transform: `translate(${ox - cx}px, ${oy - cy}px) scale(.12) rotate(${giro}deg)`, opacity: 0, easing: 'ease-out' },
-      { transform: `translate(${ox - cx}px, ${oy - cy}px) scale(.2) rotate(${giro * 0.8}deg)`, opacity: 1, offset: 0.06, easing: ida },
-      { transform: 'translate(0, 0) scale(1) rotate(0deg)', opacity: 1, offset: 0.4, easing: 'ease-in-out' },
-      { transform: 'translate(0, 0) scale(1.06) rotate(0deg)', opacity: 1, offset: 0.78, easing: 'ease-in' },
-      { transform: 'translate(0, -12px) scale(1.5) rotate(0deg)', opacity: 0 },
+      { transform: `translate(${ox - cx}px, ${oy - cy}px) scale(.35) rotate(${giro}deg)`, opacity: 0, easing: 'ease-out' },
+      { transform: `translate(${ox - cx}px, ${oy - cy}px) scale(.45) rotate(${giro * 0.8}deg)`, opacity: 1, offset: 0.08, easing: 'cubic-bezier(.22, 1, .36, 1)' },
+      { transform: 'translate(0, 0) scale(1) rotate(0deg)', opacity: 1, offset: 0.45, easing: 'ease-in-out' },
+      { transform: 'translate(0, 0) scale(1.08) rotate(0deg)', opacity: 0 },
     ],
-    { duration: 1600, fill: 'forwards' }
-  );
-  capa.querySelector<HTMLElement>('.cambio__halo')!.animate(
-    [
-      { opacity: 0, transform: 'scale(.4)', easing: 'ease-out' },
-      { opacity: 1, transform: 'scale(1)', offset: 0.4, easing: 'ease-in' },
-      { opacity: 1, transform: 'scale(1.1)', offset: 0.75, easing: 'ease-in' },
-      { opacity: 0, transform: 'scale(1.6)' },
-    ],
-    { duration: 1600, fill: 'forwards' }
+    { duration: 1250, fill: 'forwards' }
   );
   viaje.finished.finally(() => capa.remove());
 
-  // Cuando el astro llega al centro, el tema nuevo se revela desde ahí.
   window.setTimeout(() => {
-    const doc = document as Document & { startViewTransition?: (cb: () => void) => { ready: Promise<void> } };
-    if (!doc.startViewTransition) { aplicarTema(next); return; }
+    const doc = document as Document & { startViewTransition?: (cb: () => void) => { ready: Promise<void>; finished: Promise<void> } };
     const raiz = document.documentElement;
+    // Sin transiciones de color mientras dura el cambio: si no, la página nueva
+    // anima desde los colores viejos y se ve un segundo destello.
     raiz.classList.add('tema-cambiando');
+    if (!doc.startViewTransition) {
+      aplicarTema(next);
+      requestAnimationFrame(() => requestAnimationFrame(() => raiz.classList.remove('tema-cambiando')));
+      return;
+    }
     const vt = doc.startViewTransition(() => aplicarTema(next));
     const radio = Math.hypot(Math.max(cx, window.innerWidth - cx), Math.max(cy, window.innerHeight - cy));
     vt.ready
       .then(() =>
         raiz.animate(
           { clipPath: [`circle(0px at ${cx}px ${cy}px)`, `circle(${radio}px at ${cx}px ${cy}px)`] },
-          { duration: 850, easing: 'cubic-bezier(.65, 0, .35, 1)', pseudoElement: '::view-transition-new(root)' }
+          { duration: 700, easing: 'cubic-bezier(.65, 0, .35, 1)', pseudoElement: '::view-transition-new(root)' }
         ).finished
       )
       .catch(() => {})
       .finally(() => raiz.classList.remove('tema-cambiando'));
-  }, 620);
+  }, 480);
 }
 
 export default function ThemeToggle() {
@@ -138,7 +103,7 @@ export default function ThemeToggle() {
     if (reducido()) { aplicarTema(next); return; }
     ocupado.current = true;
     animarCambio(next, e.currentTarget.getBoundingClientRect());
-    window.setTimeout(() => { ocupado.current = false; }, 1600);
+    window.setTimeout(() => { ocupado.current = false; }, 1300);
   };
 
   return (

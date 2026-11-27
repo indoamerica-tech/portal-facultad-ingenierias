@@ -1,6 +1,13 @@
 ---
 import Icon from '../ui/Icon.astro';
 import { CARRERAS } from '../../data/site';
+
+/** Ilustración de cada carrera (generadas con FLUX en la paleta de INGENIAX, 2026-11-27) */
+const VISUAL: Record<string, { img: string; alt: string }> = {
+  'ingenieria-industrial': { img: 'industrial', alt: 'Maqueta de una planta con brazo robótico, banda transportadora y engranajes' },
+  'ingenieria-ti': { img: 'ti', alt: 'Maqueta de una laptop protegida, nube y red de nodos conectados' },
+  'ingenieria-electrica': { img: 'electrica', alt: 'Maqueta con torre de alta tensión, paneles solares y aerogeneradores' },
+};
 ---
 
 <section class="section careers" id="carreras">
@@ -27,6 +34,18 @@ import { CARRERAS } from '../../data/site';
           data-reveal="up"
           data-tilt="4"
         >
+          {VISUAL[c.slug] && (
+            <span class="career__visual">
+              <img
+                src={`/img/carreras/${VISUAL[c.slug].img}-800.webp`}
+                srcset={`/img/carreras/${VISUAL[c.slug].img}-800.webp 800w, /img/carreras/${VISUAL[c.slug].img}-1344.webp 1344w`}
+                sizes="(max-width: 900px) 100vw, 33vw"
+                alt={VISUAL[c.slug].alt}
+                width="800" height="457" loading="lazy" decoding="async"
+              />
+            </span>
+          )}
+
           <span class="career__index mono">{String(i + 1).padStart(2, '0')}</span>
 
           <span class="career__icon">

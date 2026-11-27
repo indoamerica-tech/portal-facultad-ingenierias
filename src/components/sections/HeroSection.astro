@@ -131,6 +131,11 @@ import { CARRERAS, STATS } from '../../data/site';
     </aside>
   </div>
 
+  {/* Palabra en arte ASCII animado, como «INGENIAX» en la web del evento */}
+  <div class="container hero__marca">
+    <div class="marca-ascii" data-ascii aria-hidden="true"></div>
+  </div>
+
   <a href="#contenido" class="hero__scroll" aria-label="Bajar al contenido">
     <span class="mono">Scroll</span>
     <span class="hero__scroll-line" aria-hidden="true"></span>
@@ -141,12 +146,24 @@ import { CARRERAS, STATS } from '../../data/site';
   import { initHeroCanvas } from '../../scripts/hero-canvas';
 
   let disposeCanvas: (() => void) | null = null;
+  let disposeAscii: (() => void) | null = null;
   let specTimer: number | undefined;
 
   function initHero() {
     /* ---- Lienzo de la red de nodos ---- */
     const canvas = document.querySelector<HTMLCanvasElement>('[data-hero-canvas]');
     if (canvas) disposeCanvas = initHeroCanvas(canvas);
+
+    /* ---- «INGENIERÍAS» en ASCII (se carga aparte, no frena la portada) ---- */
+    const ascii = document.querySelector<HTMLElement>('[data-ascii]');
+    if (ascii && !ascii.firstChild) {
+      import('../../scripts/ascii-palabra').then(({ asciiPalabra }) => {
+        disposeAscii = asciiPalabra(ascii, {
+          palabra: 'INGENIERÍAS',
+          quieto: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+        });
+      });
+    }
 
     /* ---- Carrusel de fichas técnicas ---- */
     const specs = Array.from(document.querySelectorAll<HTMLElement>('[data-spec]'));
@@ -195,6 +212,8 @@ import { CARRERAS, STATS } from '../../data/site';
   function disposeHero() {
     disposeCanvas?.();
     disposeCanvas = null;
+    disposeAscii?.();
+    disposeAscii = null;
     window.clearInterval(specTimer);
   }
 

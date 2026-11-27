@@ -1,0 +1,46 @@
+# Cada push a main se publica en https://dev-facultad.indoamericatech.com
+# El servidor recibe un tar del commit y reconstruye el contenedor dev-facultad-web.
+# La llave (secreto DEV_FACULTAD_SSH_KEY) solo puede pedir ese despliegue y nada más.
+name: Desplegar dev-facultad
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: dev-facultad
+  cancel-in-progress: false
+
+jobs:
+  desplegar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Comprobar que compila
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci && npm run build
+
+      - name: Enviar al servidor y reconstruir
+        env:
+          LLAVE: ${{ secrets.DEV_FACULTAD_SSH_KEY }}
+          HOSTS: ${{ secrets.DEV_FACULTAD_KNOWN_HOSTS }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$LLAVE" > ~/.ssh/llave && chmod 600 ~/.ssh/llave
+          printf '%s\n' "$HOSTS" > ~/.ssh/known_hosts
+          git archive --format=tar HEAD | ssh -i ~/.ssh/llave -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes \
+            facultad-deploy@94.72.115.39 "$GITHUB_SHA"
+
+      - name: Verificar el sitio
+        run: |
+          for i in 1 2 3 4 5 6; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 15 https://dev-facultad.indoamericatech.com/) || true
+            echo "intento $i: $code"; [ "$code" = 200 ] && exit 0; sleep 10
+          done
+          exit 1
